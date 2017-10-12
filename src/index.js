@@ -55,4 +55,4 @@ const Style = ({ css }) =>
   <style dangerouslySetInnerHTML={{ __html: css }} />
 
 export default styled
-export { ThemeProvider } from 'theming'
+export { default as ThemeProvider } from './ThemeProvider'
