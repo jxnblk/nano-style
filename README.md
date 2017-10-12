@@ -16,6 +16,7 @@ npm i nano-style
 ```
 
 - Use object literals **or** CSS syntax
+- Pure React - no side effects
 - Functional styles
 - Theming support
 - Universal rendering with no additional setup
@@ -128,5 +129,10 @@ Currently, this approach does not attempt to deduplicate repeated CSS when a sin
 is rendered in multiple instances.
 While this does work, it may present some slight performance issues when a component
 is used multiple times in a page.
+
+### Potential areas for improvement
+
+- Caching mechanism
+- Babel plugin
 
 MIT License

@@ -1,5 +1,6 @@
 import test from 'ava'
 import React from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
 import PropTypes from 'prop-types'
 import { create as render } from 'react-test-renderer'
 import styled from '../src/css'
@@ -85,4 +86,10 @@ test('skips null values', t => {
   const [ style ] = render(<Box />).toJSON()
   const css = style.props.dangerouslySetInnerHTML.__html
   t.notRegex(css, /background/)
+})
+
+test('renders server-side', t => {
+  const Box = styled('div')`color: tomato;`
+  const html = renderToStaticMarkup(<Box />)
+  t.snapshot(html)
 })
