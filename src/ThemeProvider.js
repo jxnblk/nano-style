@@ -1,3 +1,4 @@
+import React from 'react'
 import { ThemeProvider } from 'theming'
 
 const createTheme = theme => Object.assign(function (keys) {
