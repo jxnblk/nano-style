@@ -1,0 +1,6 @@
+.nyc_output
+coverage
+src
+docs
+test
+.babelrc

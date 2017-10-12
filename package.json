@@ -1,0 +1,54 @@
+{
+  "name": "nano-style",
+  "version": "1.0.0-1",
+  "description": "Functional css-in-js for react",
+  "main": "dist/index.js",
+  "scripts": {
+    "prepublish": "babel src -d dist",
+    "start": "x0 dev docs/App.js -o",
+    "size": "npm run prepublish && bundlesize",
+    "cover": "nyc report --reporter=html --reporter=lcov > coverage.lcov && codecov",
+    "test": "nyc ava"
+  },
+  "keywords": [],
+  "author": "Brent Jackson",
+  "license": "MIT",
+  "dependencies": {
+    "objss": "^1.0.3",
+    "prop-types": "^15.6.0",
+    "stylis": "^3.3.2",
+    "theming": "^1.1.0"
+  },
+  "devDependencies": {
+    "@compositor/x0": "^2.0.0-3",
+    "ava": "^0.22.0",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "bundlesize": "^0.15.2",
+    "codecov": "^2.3.0",
+    "nyc": "^11.2.1",
+    "react": "^16.0.0",
+    "react-test-renderer": "^16.0.0",
+    "refunk": "^2.0.0-1",
+    "styled-system": "^1.0.7"
+  },
+  "ava": {
+    "require": [
+      "babel-register"
+    ],
+    "babel": "inherit"
+  },
+  "bundlesize": [
+    {
+      "path": "./dist/index.js",
+      "maxSize": "1.8 kb"
+    },
+    {
+      "path": "./dist/css.js",
+      "maxSize": "1.8 kb"
+    }
+  ]
+}
