@@ -5,7 +5,7 @@ React functional CSS-in-JS
 
 [![Build Status][build-badge]][build]
 [![Coverage][coverage-badge]][coverage]
-![gzip bundle size][size-badge]
+<!-- ![gzip bundle size][size-badge] -->
 
 [build-badge]: https://img.shields.io/travis/jxnblk/nano-style/master.svg?style=flat-square
 [build]: https://travis-ci.org/jxnblk/nano-style
