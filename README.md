@@ -5,11 +5,13 @@ React functional CSS-in-JS
 
 [![Build Status][build-badge]][build]
 [![Coverage][coverage-badge]][coverage]
+![gzip bundle size][size-badge]
 
 [build-badge]: https://img.shields.io/travis/jxnblk/nano-style/master.svg?style=flat-square
 [build]: https://travis-ci.org/jxnblk/nano-style
 [coverage-badge]: https://img.shields.io/codecov/c/github/jxnblk/nano-style.svg?style=flat-square
 [coverage]: https://codecov.io/github/jxnblk/nano-style
+[size-badge]: https://img.shields.io/badge/gzip%20size-1.66%20kB-brightgreen.svg?style=flat-square
 
 ```sh
 npm i nano-style
