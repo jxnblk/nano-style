@@ -135,4 +135,4 @@ is used multiple times in a page.
 - Caching mechanism
 - Babel plugin
 
-MIT License
+[MIT License](LICENSE.md)
