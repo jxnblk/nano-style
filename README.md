@@ -17,7 +17,7 @@ npm i nano-style
 
 - Use object literals **or** CSS syntax
 - Functional styles
-- Theming support with [theming][theming]
+- Theming support
 - Universal rendering with no additional setup
 - Removes props defined as propTypes from rendered HTML
 
@@ -130,5 +130,3 @@ While this does work, it may present some slight performance issues when a compo
 is used multiple times in a page.
 
 MIT License
-
-[theming]: https://github.com/iamstarkov/theming

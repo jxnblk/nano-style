@@ -1,19 +1,28 @@
 import React from 'react'
-import { ThemeProvider } from 'theming'
+import PropTypes from 'prop-types'
 
-const createTheme = theme => Object.assign(function (keys) {
+const createTheme = (theme = {}) => Object.assign(function (keys = '') {
   return keys.split('.')
     .reduce((a, b) => (a && a[b]) ? a[b] : null, theme)
 }, theme)
 
-const NanoProvider = ({
-  theme,
-  ...props
-}) => (
-  <ThemeProvider
-    {...props}
-    theme={createTheme(theme)}
-  />
-)
+class ThemeProvider extends React.Component {
+  getChildContext () {
+    return {
+      theme: createTheme(this.props.theme)
+    }
+  }
 
-export default NanoProvider
+  render () {
+    return <div>{this.props.children}</div>
+  }
+}
+
+ThemeProvider.childContextTypes = {
+  theme: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.object
+  ])
+}
+
+export default ThemeProvider

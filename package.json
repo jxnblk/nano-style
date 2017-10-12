@@ -16,8 +16,7 @@
   "dependencies": {
     "objss": "^1.0.3",
     "prop-types": "^15.6.0",
-    "stylis": "^3.3.2",
-    "theming": "^1.1.0"
+    "stylis": "^3.3.2"
   },
   "devDependencies": {
     "@compositor/x0": "^2.0.0-3",
