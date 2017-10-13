@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import stylis from 'stylis'
 import objss from 'objss'
 import hash from './hash'
@@ -9,12 +8,10 @@ import { PREFIX, CHANNEL } from './constants'
 
 const styled = Component => (strings, ...tokens) => {
   const isElement = typeof Component === 'string'
+  // todo: can any of this be parsed statically?
+  // - check for !tokens.length
 
   class Styled extends React.Component {
-    static contextTypes = {
-      registerCSS: PropTypes.func
-    }
-
     constructor (props, context) {
       super(props)
 
@@ -56,14 +53,6 @@ const styled = Component => (strings, ...tokens) => {
       this.state = {
         className: '',
         css: ''
-      }
-
-      this.registered = false
-
-      const { registerCSS } = context
-      if (typeof registerCSS === 'function') {
-        // what do register...
-        // this.registered = registerCSS()
       }
     }
 

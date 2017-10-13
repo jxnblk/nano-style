@@ -1,10 +1,11 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import hash from './hash'
 import parse from './parse'
 import withTheme from './withTheme'
 import Style from './Style'
 import { PREFIX, CHANNEL } from './constants'
+
+import StyleProvider from './StyleProvider'
 
 const styled = Component => (...args) => {
   const staticStyles = args.filter(a => typeof a !== 'function')
@@ -13,12 +14,9 @@ const styled = Component => (...args) => {
   const baseClassName = PREFIX + hash(JSON.stringify(staticStyles))
   const base = parse('.' + baseClassName, staticStyles)
   const isElement = typeof Component === 'string'
+  const isRegistered = StyleProvider.registerCSS(baseClassName, base)
 
   class Styled extends React.Component {
-    static contextTypes = {
-      registerCSS: PropTypes.func
-    }
-
     constructor (props, context) {
       super(props)
 
@@ -53,13 +51,6 @@ const styled = Component => (...args) => {
         className: '',
         css: ''
       }
-
-      this.registered = false
-
-      const { registerCSS } = context
-      if (typeof registerCSS === 'function') {
-        this.registered = registerCSS(baseClassName, base)
-      }
     }
 
     componentWillMount () {
@@ -83,7 +74,7 @@ const styled = Component => (...args) => {
       ].join(' ').trim()
 
       return [
-        !this.registered && !!base && <Style key='base' css={base} />,
+        !isRegistered && !!base && <Style key='base' css={base} />,
         !!css && <Style key='css' css={css} />,
         <Component
           {...next}

@@ -1,41 +1,20 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import Style from './Style'
 
+let base = ''
+const cache = {}
+
 class StyleProvider extends React.Component {
-  static childContextTypes = {
-    registerCSS: PropTypes.func
-  }
-
-  constructor () {
-    super()
-    this.state = {
-      css: ''
-    }
-
-    this.cache = {}
-
-    this.registerCSS = (id, css) => {
-      if (this.cache[id]) return css
-      this.setState(state => ({
-        css: state.css + css
-      }))
-      this.cache[id] = true
-      return css
-    }
-  }
-
-  getChildContext () {
-    return {
-      registerCSS: this.registerCSS
-    }
+  static registerCSS = (id, css) => {
+    if (cache[id]) return true
+    base += css
+    cache[id] = true
+    return true
   }
 
   render () {
-    const { css } = this.state
-
     return [
-      <Style id='nano-style-provider' key='provider-style' css={css} />,
+      <Style id='nano-style-provider' key='provider-style' css={base} />,
       this.props.children
     ]
   }
