@@ -4,35 +4,56 @@ import Style from './Style'
 
 class StyleProvider extends React.Component {
   static childContextTypes = {
-    registerCSS: PropTypes.func
+    registerCSS: PropTypes.func,
+    removeCSS: PropTypes.func,
+    cache: PropTypes.array
   }
 
   constructor () {
     super()
+
     this.state = {
-      css: ''
+      rules: []
     }
 
-    this.cache = {}
-
     this.registerCSS = (id, css) => {
-      if (this.cache[id]) return css
+      const { rules } = this.state
+      const rule = rules.find(r => r.id === id)
+      if (rule) return true
       this.setState(state => ({
-        css: state.css + css
+        css: state.css + css,
+        rules: [
+          ...state.rules,
+          { id, css }
+        ]
       }))
-      this.cache[id] = true
-      return css
+
+      return true
+    }
+
+    this.removeCSS = id => {
+      const { rules } = this.state
+      const i = rules.findIndex(r => r.id === id)
+      this.setState(state => ({
+        rules: [
+          ...state.rules.slice(0, i),
+          ...state.rules.slice(i + 1),
+        ]
+      }))
     }
   }
 
   getChildContext () {
     return {
-      registerCSS: this.registerCSS
+      registerCSS: this.registerCSS,
+      removeCSS: this.removeCSS,
+      cache: this.state.rules.map(r => r.id)
     }
   }
 
   render () {
-    const { css } = this.state
+    const { rules } = this.state
+    const css = rules.map(r => r.css).join('')
 
     return [
       <Style id='nano-style-provider' key='provider-style' css={css} />,

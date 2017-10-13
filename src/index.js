@@ -7,34 +7,32 @@ import Style from './Style'
 import { PREFIX, CHANNEL } from './constants'
 
 const styled = Component => (...args) => {
-  const staticStyles = args.filter(a => typeof a !== 'function')
-    .reduce((a, b) => Object.assign(a, b), {})
-  const dynamicStyles = args.filter(a => typeof a === 'function')
-  const baseClassName = PREFIX + hash(JSON.stringify(staticStyles))
-  const base = parse('.' + baseClassName, staticStyles)
   const isElement = typeof Component === 'string'
 
   class Styled extends React.Component {
     static contextTypes = {
-      registerCSS: PropTypes.func
+      registerCSS: PropTypes.func,
+      removeCSS: PropTypes.func,
+      cache: PropTypes.array
     }
 
     constructor (props, context) {
       super(props)
 
       this.getStyles = props => {
-        const styles = dynamicStyles.map(fn => fn(props))
+        const styles = args.map(a => typeof a === 'function' ? a(props) : a)
         const className = PREFIX + hash(JSON.stringify(styles))
         const css = styles.map(style => parse('.' + className, style)).join('')
 
         const { registerCSS } = context
         if (typeof registerCSS === 'function') {
-          this.dynamicCached = registerCSS(className, css)
+          registerCSS(className, css)
         }
-        this.setState({
+
+        return {
           className,
           css
-        })
+        }
       }
 
       this.getProps = props => {
@@ -53,54 +51,38 @@ const styled = Component => (...args) => {
         return next
       }
 
-      this.state = {
-        className: '',
-        css: ''
-      }
-
-      this.cached = false
-      this.dynamicCached = false
-
-      const { registerCSS } = context
-      if (typeof registerCSS === 'function') {
-        this.cached = registerCSS(baseClassName, base)
-      }
-    }
-
-    componentWillMount () {
-      this.getStyles(this.props)
-    }
-
-    componentDidMount () {
-      // const { registerCSS } = this.context
-      // if (typeof registerCSS === 'function') {
-      //   this.cached = registerCSS(baseClassName, base)
-      // }
+      this.state = this.getStyles(props)
     }
 
     componentWillReceiveProps (next) {
       if (next !== this.props) {
-        this.getStyles(next)
+        const nextCSS = this.getStyles(next)
+        if (nextCSS.css === this.state.css) return
+        const { className } = this.state
+        const { removeCSS } = this.context
+
+        if (typeof removeCSS === 'function') {
+          // might remove for other components
+          removeCSS(className)
+        }
+        this.setState(this.getStyles(next))
       }
     }
 
     render () {
-      const { css } = this.state
+      const { className, css } = this.state
+      const { cache = [] } = this.context
+      const cached = cache.includes(className)
       const next = this.getProps(this.props)
 
-      const className = [
-        this.props.className,
-        baseClassName,
-        this.state.className
-      ].join(' ').trim()
+      const cn = [ this.props.className, className ].join(' ').trim()
 
       return [
-        !this.cached && !!base && <Style key='base' css={base} />,
-        !this.dynamicCached && !!css && <Style key='css' css={css} />,
+        !cached && !!css && <Style key='css' css={css} />,
         <Component
           {...next}
           key='Component'
-          className={className}
+          className={cn}
         />
       ]
     }

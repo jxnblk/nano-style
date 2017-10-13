@@ -11,6 +11,7 @@ const Heading = styled('h2')({
   textDecoration: 'underline'
 })
 
+  /*
 const CSSHello = css('h1')`
   font-size: 32px;
   font-weight: 600;
@@ -24,6 +25,7 @@ CSSHello.propTypes = {
   ...propTypes.width,
   ...propTypes.color
 }
+*/
 
 const Root = styled('div')({
   fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
@@ -93,12 +95,6 @@ const App = connect(props => {
           bg={color}>
           Hello {props.count}
         </Hello>
-        <CSSHello
-          p={[ 1, 3 ]}
-          width={[ 1, .5 ]}
-          bg={color}>
-          Hello {props.count}
-        </CSSHello>
       </Root>
     </Provider>
   ]
