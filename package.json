@@ -6,6 +6,7 @@
   "scripts": {
     "prepublish": "babel src -d dist",
     "start": "x0 dev docs/App.js -o",
+    "build": "x0 build docs/App.js --static -d docs",
     "size": "npm run prepublish && bundlesize",
     "cover": "nyc report --reporter=html --reporter=lcov > coverage.lcov && codecov",
     "test": "nyc ava"

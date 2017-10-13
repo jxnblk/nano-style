@@ -58,12 +58,19 @@ const styled = Component => (...args) => {
 
       const { registerCSS } = context
       if (typeof registerCSS === 'function') {
-        this.registered = registerCSS(baseClassName, base)
+        // registerCSS(baseClassName, base)
       }
     }
 
     componentWillMount () {
       this.getStyles(this.props)
+    }
+
+    componentDidMount () {
+      const { registerCSS } = this.context
+      if (typeof registerCSS === 'function') {
+        this.registered = registerCSS(baseClassName, base)
+      }
     }
 
     componentWillReceiveProps (next) {
