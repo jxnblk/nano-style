@@ -31,7 +31,10 @@ const styled = Component => (...args) => {
       this.getProps = props => {
         if (!isElement) return props
         const next = {}
-        const blacklist = Object.keys(ThemeStyled.propTypes || {})
+        const blacklist = [
+          ...Object.keys(ThemeStyled.propTypes || {}),
+          'theme'
+        ]
         for (let key in props) {
           if (blacklist.includes(key)) continue
           next[key] = props[key]
@@ -85,7 +88,6 @@ const styled = Component => (...args) => {
 
   const ThemeStyled = withTheme(Styled)
 
-  // return withTheme(Styled)
   return ThemeStyled
 }
 
