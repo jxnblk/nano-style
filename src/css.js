@@ -1,42 +1,96 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import stylis from 'stylis'
 import objss from 'objss'
 import hash from './hash'
 import withTheme from './withTheme'
-
-const prefix = 'nano'
+import Style from './Style'
+import { PREFIX, CHANNEL } from './constants'
 
 const styled = Component => (strings, ...tokens) => {
-  class Styled extends React.Component {
-    render () {
-      const styles = strings.map((str, i) => {
-        const token = tokens[i] || ''
-        const parsed = typeof token === 'function'
-          ? token(this.props)
-          : token
-        const css = typeof parsed === 'object'
-          ? objss(parsed)
-          : parsed
-        return str + css
-      }).join('')
-      const className = prefix + hash(styles)
-      const css = stylis('.' + className, styles)
+  const isElement = typeof Component === 'string'
 
-      const blacklist = Object.keys(ThemeStyled.propTypes || {})
-      const next = {}
-      for (let key in this.props) {
-        if (typeof Component === 'string' && blacklist.includes(key)) continue
-        next[key] = this.props[key]
+  class Styled extends React.Component {
+    static contextTypes = {
+      registerCSS: PropTypes.func
+    }
+
+    constructor (props) {
+      super(props)
+
+      this.getStyles = props => {
+        const styles = strings.map((str, i) => {
+          const token = tokens[i] || ''
+          const parsed = typeof token === 'function'
+            ? token(props)
+            : token
+          const css = typeof parsed === 'object'
+            ? objss(parsed)
+            : parsed
+          return str + css
+        }).join('')
+        const className = PREFIX + hash(styles)
+        const css = stylis('.' + className, styles)
+
+        this.setState({
+          className,
+          css
+        })
       }
 
-      next.className = [
+      this.getProps = props => {
+        if (!isElement) return props
+        const next = {}
+        const blacklist = [
+          ...Object.keys(ThemeStyled.propTypes || {}),
+          'theme'
+        ]
+        for (let key in props) {
+          if (blacklist.includes(key)) continue
+          next[key] = props[key]
+        }
+        if (props.className) next.className = '' + props.className
+
+        return next
+      }
+
+      this.state = {
+        className: '',
+        css: ''
+      }
+
+      this.registered = false
+    }
+
+    componentWillMount () {
+      const { registerCSS } = this.context
+      if (typeof registerCSS === 'function') {
+        // this.registered = registerCSS()
+      }
+    }
+
+    componentWillReceiveProps (next) {
+      if (next !== this.props) {
+        this.getStyles(next)
+      }
+    }
+
+    render () {
+      const { css } = this.state
+      const next = this.getProps(this.props)
+
+      const className = [
         this.props.className,
-        className
+        this.state.className
       ].join(' ').trim()
 
       return [
         <Style key='css' css={css} />,
-        <Component key='Component' {...next} />
+        <Component
+          key='Component'
+          {...next}
+          className={className}
+        />
       ]
     }
   }
@@ -50,8 +104,5 @@ const styled = Component => (strings, ...tokens) => {
   return ThemeStyled
 }
 
-const Style = ({ css }) =>
-  <style dangerouslySetInnerHTML={{ __html: css }} />
-
 export default styled
-export { default as ThemeProvider } from './ThemeProvider'
+export { default as Provider } from './Provider'

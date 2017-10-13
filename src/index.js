@@ -1,25 +1,30 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import hash from './hash'
 import parse from './parse'
 import withTheme from './withTheme'
-
-const prefix = 'nano'
+import Style from './Style'
+import { PREFIX, CHANNEL } from './constants'
 
 const styled = Component => (...args) => {
   const staticStyles = args.filter(a => typeof a !== 'function')
     .reduce((a, b) => Object.assign(a, b), {})
   const dynamicStyles = args.filter(a => typeof a === 'function')
-  const baseClassName = prefix + hash(JSON.stringify(staticStyles))
+  const baseClassName = PREFIX + hash(JSON.stringify(staticStyles))
   const base = parse('.' + baseClassName, staticStyles)
   const isElement = typeof Component === 'string'
 
   class Styled extends React.Component {
+    static contextTypes = {
+      registerCSS: PropTypes.func
+    }
+
     constructor (props) {
       super(props)
 
       this.getStyles = props => {
         const styles = dynamicStyles.map(fn => fn(props))
-        const className = prefix + hash(JSON.stringify(styles))
+        const className = PREFIX + hash(JSON.stringify(styles))
         const css = styles.map(style => parse('.' + className, style)).join('')
 
         this.setState({
@@ -48,9 +53,14 @@ const styled = Component => (...args) => {
         className: '',
         css: ''
       }
+
+      this.registered = false
     }
 
     componentWillMount () {
+      if (typeof this.context.registerCSS === 'function') {
+        this.registered = this.context.registerCSS(baseClassName, base)
+      }
       this.getStyles(this.props)
     }
 
@@ -61,22 +71,22 @@ const styled = Component => (...args) => {
     }
 
     render () {
-      const { className, css } = this.state
+      const { css } = this.state
       const next = this.getProps(this.props)
 
-      const cn = [
+      const className = [
         this.props.className,
         baseClassName,
-        className
+        this.state.className
       ].join(' ').trim()
 
       return [
-        !!base && <Style key='base' css={base} />,
+        !this.registered && !!base && <Style key='base' css={base} />,
         !!css && <Style key='css' css={css} />,
         <Component
           {...next}
           key='Component'
-          className={cn}
+          className={className}
         />
       ]
     }
@@ -91,8 +101,5 @@ const styled = Component => (...args) => {
   return ThemeStyled
 }
 
-const Style = ({ css }) =>
-  <style dangerouslySetInnerHTML={{ __html: css }} />
-
 export default styled
-export { default as ThemeProvider } from './ThemeProvider'
+export { default as Provider } from './Provider'

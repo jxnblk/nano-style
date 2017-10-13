@@ -2,7 +2,14 @@ import React from 'react'
 import connect from 'refunk'
 import { space, width, color, propTypes } from 'styled-system'
 import css from '../src/css'
-import styled, { ThemeProvider } from '../src'
+import styled, { Provider } from '../src'
+
+const Heading = styled('h2')({
+  fontSize: '48px',
+  lineHeight: 1.25,
+  color: 'tomato',
+  textDecoration: 'underline'
+})
 
 const CSSHello = css('h1')`
   font-size: 32px;
@@ -58,35 +65,44 @@ const theme = {
   }
 }
 
-const App = connect(props => [
-  <style dangerouslySetInnerHTML={{
-    __html: `
-      *{box-sizing:border-box}
-      body{margin:0}
-    `
-  }} />,
-  <ThemeProvider theme={theme}>
-    <Root color='blue'>
-      <Hello>Hello</Hello>
-      <button
-        onClick={e => { props.update(inc) }}
-        children='+'
-      />
-      <Hello
-        p={[ 1, 3 ]}
-        width={[ 1, .5 ]}
-        bg={colors[props.count % colors.length]}>
-        Hello {props.count}
-      </Hello>
-      <CSSHello
-        p={[ 1, 3 ]}
-        width={[ 1, .5 ]}
-        bg={colors[props.count % colors.length]}>
-        Hello {props.count}
-      </CSSHello>
-    </Root>
-  </ThemeProvider>
-])
+const App = connect(props => {
+  const color = colors[props.count % colors.length]
+
+  return [
+    <style key='style' dangerouslySetInnerHTML={{
+      __html: `
+        *{box-sizing:border-box}
+        body{margin:0}
+      `
+    }} />,
+    <Provider key='main' theme={theme}>
+      <Root color='blue'>
+        <Heading>Heading</Heading>
+        <Heading>Heading</Heading>
+        <Hello>Hello</Hello>
+        <button
+          onClick={e => { props.update(inc) }}
+          children='+'
+        />
+        <div style={{
+          backgroundColor: color
+        }} children='color' />
+        <Hello
+          p={[ 1, 3 ]}
+          width={[ 1, .5 ]}
+          bg={color}>
+          Hello {props.count}
+        </Hello>
+        <CSSHello
+          p={[ 1, 3 ]}
+          width={[ 1, .5 ]}
+          bg={color}>
+          Hello {props.count}
+        </CSSHello>
+      </Root>
+    </Provider>
+  ]
+})
 
 App.defaultProps = {
   count: 0
