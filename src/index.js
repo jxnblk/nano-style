@@ -36,6 +36,8 @@ const styled = Component => (...args) => {
           if (blacklist.includes(key)) continue
           next[key] = props[key]
         }
+        if (props.className) next.className = '' + props.className
+
         return next
       }
 
