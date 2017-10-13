@@ -61,7 +61,7 @@ const styled = Component => (...args) => {
       const { className, css } = this.state
       const next = this.getProps(this.props)
 
-      next.className = [
+      const cn = [
         this.props.className,
         baseClassName,
         className
@@ -70,7 +70,11 @@ const styled = Component => (...args) => {
       return [
         !!base && <Style key='base' css={base} />,
         !!css && <Style key='css' css={css} />,
-        <Component key='Component' {...next} />
+        <Component
+          {...next}
+          key='Component'
+          className={cn}
+        />
       ]
     }
   }
