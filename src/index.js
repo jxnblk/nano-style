@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import hash from './hash'
 import parse from './parse'
 import withTheme from './withTheme'
@@ -15,10 +16,15 @@ const styled = Component => (...args) => {
   const base = parse('.' + baseClassName, staticStyles)
   const isElement = typeof Component === 'string'
 
-  // needs to check for missing Provider context
-  const isRegistered = StyleProvider.registerCSS(baseClassName, base)
+  StyleProvider.registerCSS(baseClassName, base)
 
   class Styled extends React.Component {
+    static contextTypes = {
+      [CHANNEL]: PropTypes.shape({
+        cache: PropTypes.object
+      })
+    }
+
     constructor (props, context) {
       super(props)
 
@@ -49,10 +55,16 @@ const styled = Component => (...args) => {
         return next
       }
 
+      this.getContext = () => {
+        return this.context[CHANNEL]
+      }
+
       this.state = {
         className: '',
         css: ''
       }
+
+      this.cached = context[CHANNEL] && context[CHANNEL].cache[baseClassName]
     }
 
     componentWillMount () {
@@ -76,7 +88,7 @@ const styled = Component => (...args) => {
       ].join(' ').trim()
 
       return [
-        !isRegistered && !!base && <Style key='base' css={base} />,
+        !this.cached && !!base && <Style key='base' css={base} />,
         !!css && <Style key='css' css={css} />,
         <Component
           {...next}
