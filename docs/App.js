@@ -3,6 +3,15 @@ import connect from 'refunk'
 import { space, width, color, propTypes } from 'styled-system'
 import css from '../src/css'
 import styled, { ThemeProvider } from '../src'
+import Provider from '../src/Provider'
+
+const Heading = styled('h2')({
+  fontSize: '48px',
+  fontWeight: 600,
+  lineHeight: 1.25,
+  color: 'tomato',
+  textDecoration: 'underline'
+})
 
 const CSSHello = css('h1')`
   font-size: 32px;
@@ -66,25 +75,28 @@ const App = connect(props => [
     `
   }} />,
   <ThemeProvider theme={theme}>
-    <Root color='blue'>
-      <Hello>Hello</Hello>
-      <button
-        onClick={e => { props.update(inc) }}
-        children='+'
-      />
-      <Hello
-        p={[ 1, 3 ]}
-        width={[ 1, .5 ]}
-        bg={colors[props.count % colors.length]}>
-        Hello {props.count}
-      </Hello>
-      <CSSHello
-        p={[ 1, 3 ]}
-        width={[ 1, .5 ]}
-        bg={colors[props.count % colors.length]}>
-        Hello {props.count}
-      </CSSHello>
-    </Root>
+    <Provider>
+      <Root color='blue'>
+        <Heading>Static Heading</Heading>
+        <Hello>Hello</Hello>
+        <button
+          onClick={e => { props.update(inc) }}
+          children='+'
+        />
+        <Hello
+          p={[ 1, 3 ]}
+          width={[ 1, .5 ]}
+          bg={colors[props.count % colors.length]}>
+          Hello {props.count}
+        </Hello>
+        <CSSHello
+          p={[ 1, 3 ]}
+          width={[ 1, .5 ]}
+          bg={colors[props.count % colors.length]}>
+          Hello {props.count}
+        </CSSHello>
+      </Root>
+    </Provider>
   </ThemeProvider>
 ])
 

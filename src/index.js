@@ -3,6 +3,8 @@ import hash from './hash'
 import parse from './parse'
 import withTheme from './withTheme'
 
+import PropTypes from 'prop-types'
+
 const prefix = 'nano'
 
 const styled = Component => (...args) => {
@@ -13,6 +15,20 @@ const styled = Component => (...args) => {
   const base = parse('.' + baseClassName, staticStyles)
 
   class Styled extends React.Component {
+    static contextTypes = {
+      registerCSS: PropTypes.func
+    }
+
+    constructor () {
+      super()
+      this.registered = false
+    }
+
+    componentWillMount () {
+      const { registerCSS } = this.context
+      this.registered = registerCSS(base)
+    }
+
     render () {
       const styles = dynamicStyles
         .map((func, i) => func(this.props))
@@ -34,7 +50,7 @@ const styled = Component => (...args) => {
       ].join(' ').trim()
 
       return [
-        !!base && <Style key='base' css={base} />,
+        !!base && !this.registered && <Style key='base' css={base} />,
         !!css && <Style key='css' css={css} />,
         <Component key='Component' {...next} />
       ]
@@ -47,7 +63,6 @@ const styled = Component => (...args) => {
 
   const ThemeStyled = withTheme(Styled)
 
-  // return withTheme(Styled)
   return ThemeStyled
 }
 
@@ -56,3 +71,5 @@ const Style = ({ css }) =>
 
 export default styled
 export { default as ThemeProvider } from './ThemeProvider'
+// todo combine or rename
+export { default as Provider } from './Provider'
