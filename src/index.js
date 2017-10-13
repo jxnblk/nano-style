@@ -60,7 +60,7 @@ const styled = Component => (...args) => {
       const next = this.getProps(this.props)
 
       next.className = [
-        next.className,
+        this.props.className,
         baseClassName,
         className
       ].join(' ').trim()
