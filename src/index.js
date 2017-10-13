@@ -27,6 +27,10 @@ const styled = Component => (...args) => {
         const className = PREFIX + hash(JSON.stringify(styles))
         const css = styles.map(style => parse('.' + className, style)).join('')
 
+        const { registerCSS } = context
+        if (typeof registerCSS === 'function') {
+          this.dynamicCached = registerCSS(className, css)
+        }
         this.setState({
           className,
           css
@@ -54,11 +58,12 @@ const styled = Component => (...args) => {
         css: ''
       }
 
-      this.registered = false
+      this.cached = false
+      this.dynamicCached = false
 
       const { registerCSS } = context
       if (typeof registerCSS === 'function') {
-        // registerCSS(baseClassName, base)
+        this.cached = registerCSS(baseClassName, base)
       }
     }
 
@@ -67,10 +72,10 @@ const styled = Component => (...args) => {
     }
 
     componentDidMount () {
-      const { registerCSS } = this.context
-      if (typeof registerCSS === 'function') {
-        this.registered = registerCSS(baseClassName, base)
-      }
+      // const { registerCSS } = this.context
+      // if (typeof registerCSS === 'function') {
+      //   this.cached = registerCSS(baseClassName, base)
+      // }
     }
 
     componentWillReceiveProps (next) {
@@ -90,8 +95,8 @@ const styled = Component => (...args) => {
       ].join(' ').trim()
 
       return [
-        !this.registered && !!base && <Style key='base' css={base} />,
-        !!css && <Style key='css' css={css} />,
+        !this.cached && !!base && <Style key='base' css={base} />,
+        !this.dynamicCached && !!css && <Style key='css' css={css} />,
         <Component
           {...next}
           key='Component'
