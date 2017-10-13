@@ -19,7 +19,7 @@ const styled = Component => (...args) => {
       registerCSS: PropTypes.func
     }
 
-    constructor (props) {
+    constructor (props, context) {
       super(props)
 
       this.getStyles = props => {
@@ -55,13 +55,14 @@ const styled = Component => (...args) => {
       }
 
       this.registered = false
-    }
 
-    componentWillMount () {
-      const { registerCSS } = this.context
+      const { registerCSS } = context
       if (typeof registerCSS === 'function') {
         this.registered = registerCSS(baseClassName, base)
       }
+    }
+
+    componentWillMount () {
       this.getStyles(this.props)
     }
 

@@ -15,19 +15,18 @@ const styled = Component => (strings, ...tokens) => {
       registerCSS: PropTypes.func
     }
 
-    constructor (props) {
+    constructor (props, context) {
       super(props)
 
       this.getStyles = props => {
-        const styles = strings.map((str, i) => {
-          const token = tokens[i] || ''
+        const styles = tokens.map((token = '', i) => {
           const parsed = typeof token === 'function'
             ? token(props)
             : token
           const css = typeof parsed === 'object'
             ? objss(parsed)
             : parsed
-          return str + css
+          return strings[i] + css
         }).join('')
         const className = PREFIX + hash(styles)
         const css = stylis('.' + className, styles)
@@ -60,13 +59,16 @@ const styled = Component => (strings, ...tokens) => {
       }
 
       this.registered = false
+
+      const { registerCSS } = context
+      if (typeof registerCSS === 'function') {
+        // what do register...
+        // this.registered = registerCSS()
+      }
     }
 
     componentWillMount () {
-      const { registerCSS } = this.context
-      if (typeof registerCSS === 'function') {
-        // this.registered = registerCSS()
-      }
+      this.getStyles(this.props)
     }
 
     componentWillReceiveProps (next) {
