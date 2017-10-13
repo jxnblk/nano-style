@@ -35,7 +35,7 @@ class StyleProvider extends React.Component {
     const { css } = this.state
 
     return [
-      <Style key='provider-style' css={css} />,
+      <Style id='nano-style-provider' key='provider-style' css={css} />,
       this.props.children
     ]
   }

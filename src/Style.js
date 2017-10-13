@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Style = ({ css }) =>
-  <style dangerouslySetInnerHTML={{ __html: css }} />
+const Style = ({ css, ...props }) =>
+  <style {...props} dangerouslySetInnerHTML={{ __html: css }} />
 
 export default Style
