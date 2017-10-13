@@ -14,6 +14,8 @@ const styled = Component => (...args) => {
   const baseClassName = PREFIX + hash(JSON.stringify(staticStyles))
   const base = parse('.' + baseClassName, staticStyles)
   const isElement = typeof Component === 'string'
+
+  // needs to check for missing Provider context
   const isRegistered = StyleProvider.registerCSS(baseClassName, base)
 
   class Styled extends React.Component {

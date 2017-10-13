@@ -75,7 +75,7 @@ const App = connect(props => {
         body{margin:0}
       `
     }} />,
-    <Provider key='main' theme={theme}>
+    <div key='main' theme={theme}>
       <Root color='blue'>
         <Heading>Heading</Heading>
         <Heading>Heading</Heading>
@@ -100,7 +100,7 @@ const App = connect(props => {
           Hello {props.count}
         </CSSHello>
       </Root>
-    </Provider>
+    </div>
   ]
 })
 
