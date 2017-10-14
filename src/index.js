@@ -69,13 +69,13 @@ const styled = Component => (...args) => {
       ].join(' ').trim()
 
       return [
-        !!base && <Style key='base' css={base} />,
-        !!css && <Style key='css' css={css} />,
         <Component
           {...next}
           key='Component'
           className={cn}
-        />
+        />,
+        !!base && <Style key='base' css={base} />,
+        !!css && <Style key='css' css={css} />,
       ]
     }
   }

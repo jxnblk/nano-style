@@ -18,7 +18,7 @@ test('provides theme as props.theme', t => {
       <Box />
     </ThemeProvider>
   ).toJSON()
-  const [ style, div ] = json.children
+  const [ div, style ] = json.children
   const css = style.props.dangerouslySetInnerHTML.__html
   t.true(div.props.className.length > 0)
   t.regex(css, /color:#07c/)
@@ -34,7 +34,7 @@ test('provides theme as a function', t => {
       <Box />
     </ThemeProvider>
   ).toJSON()
-  const [ style, div ] = json.children
+  const [ div, style ] = json.children
   const css = style.props.dangerouslySetInnerHTML.__html
   t.true(div.props.className.length > 0)
   t.regex(css, /color:#07c/)
