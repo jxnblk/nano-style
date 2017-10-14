@@ -22,7 +22,10 @@ const styled = Component => (strings, ...tokens) => {
       const className = prefix + hash(styles)
       const css = stylis('.' + className, styles)
 
-      const blacklist = Object.keys(ThemeStyled.propTypes || {})
+      const blacklist = [
+        ...Object.keys(ThemeStyled.propTypes || {}),
+        'theme'
+      ]
       const next = {}
       for (let key in this.props) {
         if (typeof Component === 'string' && blacklist.includes(key)) continue

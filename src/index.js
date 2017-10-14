@@ -20,7 +20,10 @@ const styled = Component => (...args) => {
       const dynamicClassName = prefix + hash(JSON.stringify(styles))
       const css = styles.map(style => parse('.' + dynamicClassName, style)).join('')
 
-      const blacklist = Object.keys(ThemeStyled.propTypes || {})
+      const blacklist = [
+        ...Object.keys(ThemeStyled.propTypes || {}),
+        'theme'
+      ]
       const next = {}
       for (let key in this.props) {
         if (typeof Component === 'string' && blacklist.includes(key)) continue
