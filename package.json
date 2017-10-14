@@ -1,11 +1,12 @@
 {
   "name": "nano-style",
-  "version": "1.0.0-14",
+  "version": "1.0.0-15",
   "description": "Functional css-in-js for react",
   "main": "dist/index.js",
   "scripts": {
     "prepublish": "babel src -d dist",
     "start": "x0 dev docs/App.js -o",
+    "build": "x0 build docs/App.js -d docs --static",
     "size": "npm run prepublish && bundlesize",
     "cover": "nyc report --reporter=html --reporter=lcov > coverage.lcov && codecov",
     "test": "nyc ava"
@@ -43,11 +44,11 @@
   "bundlesize": [
     {
       "path": "./dist/index.js",
-      "maxSize": "1.8 kb"
+      "maxSize": "2 kb"
     },
     {
       "path": "./dist/css.js",
-      "maxSize": "1.8 kb"
+      "maxSize": "2 kb"
     }
   ]
 }
