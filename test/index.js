@@ -21,7 +21,7 @@ test('returns a component', t => {
 test('returns a component with a className and style tag', t => {
   const Box = styled('div')({ color: 'tomato' })
   const json = render(<Box />).toJSON()
-  const [ style, div ] = json
+  const [ div, style ] = json
   t.true(Array.isArray(json))
   const css = style.props.dangerouslySetInnerHTML.__html
   t.regex(css, /color:tomato/)
@@ -31,7 +31,7 @@ test('returns a component with a className and style tag', t => {
 test('handles functional styles', t => {
   const Box = styled('div')(props => ({ color: props.color }))
   const json = render(<Box color='tomato' />).toJSON()
-  const [ style, div ] = json
+  const [ div, style ] = json
   const css = style.props.dangerouslySetInnerHTML.__html
   t.regex(css, /color:tomato/)
   t.true(div.props.className.length > 0)
@@ -43,7 +43,7 @@ test('removes props defined as propTypes', t => {
     color: PropTypes.string
   }
   const json = render(<Box color='tomato' />).toJSON()
-  const [ style, div ] = json
+  const [ div, style ] = json
   const css = style.props.dangerouslySetInnerHTML.__html
   t.truthy(div.props.className)
   t.falsy(div.props.color)
@@ -60,7 +60,7 @@ test('removes props defined as propTypes from extended components', t => {
   }
   const box = render(<Box color='tomato' />).toJSON()
   const flex = render(<Flex align='center' color='blue' />).toJSON()
-  const [ a, b, div ] = flex
+  const [ div, a, b ] = flex
   t.truthy(div.props.className)
   t.falsy(div.props.align)
   t.falsy(div.props.color)
@@ -70,7 +70,7 @@ test('handles multiple arguments', t => {
   const color = props => ({ color: props.color })
   const Box = styled('div')({ display: 'inline-block' }, color)
   const json = render(<Box color='tomato' />).toJSON()
-  const [ astyle, bstyle, div ] = json
+  const [ div, astyle, bstyle ] = json
   const a = astyle.props.dangerouslySetInnerHTML.__html
   const b = bstyle.props.dangerouslySetInnerHTML.__html
   t.regex(a, /display:inline-block/)
@@ -83,7 +83,7 @@ test('handles pseudoclasses', t => {
       color: 'tomato'
     }
   })
-  const [ style, div ] = render(<Box color='tomato' />).toJSON()
+  const [ div, style ] = render(<Box color='tomato' />).toJSON()
   const css = style.props.dangerouslySetInnerHTML.__html
   t.regex(css, /:hover\{color:tomato\}/)
 })
@@ -94,7 +94,7 @@ test('handles media queries', t => {
       color: 'tomato'
     }
   })
-  const [ style, div ] = render(<Box color='tomato' />).toJSON()
+  const [ div, style ] = render(<Box color='tomato' />).toJSON()
   const css = style.props.dangerouslySetInnerHTML.__html
   t.regex(css, /media\sprint\{\.[a-z0-9]+\{color:tomato\}/)
 })
@@ -104,7 +104,7 @@ test('skips null values', t => {
     color: 'tomato',
     backgroundColor: null
   })
-  const [ style ] = render(<Box />).toJSON()
+  const [ div, style ] = render(<Box />).toJSON()
   const css = style.props.dangerouslySetInnerHTML.__html
   t.notRegex(css, /background/)
 })
@@ -121,6 +121,6 @@ test('accepts a className prop', t => {
   const Box = styled('div')({
     color: 'tomato'
   })
-  const [ style, div ] = render(<Box className='hello' />).toJSON()
+  const [ div, style ] = render(<Box className='hello' />).toJSON()
   t.regex(div.props.className, /^hello/)
 })
