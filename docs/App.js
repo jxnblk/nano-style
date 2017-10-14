@@ -59,13 +59,15 @@ const theme = {
 }
 
 const App = connect(props => [
-  <style dangerouslySetInnerHTML={{
-    __html: `
-      *{box-sizing:border-box}
-      body{margin:0}
-    `
-  }} />,
-  <ThemeProvider theme={theme}>
+  <style key='style'
+    dangerouslySetInnerHTML={{
+      __html: `
+        *{box-sizing:border-box}
+        body{margin:0}
+      `
+    }}
+  />,
+  <ThemeProvider key='main' theme={theme}>
     <Root color='blue'>
       <Hello>Hello</Hello>
       <button
