@@ -70,7 +70,7 @@ const Button = styled('button')(props => ({
 ### CSS Syntax
 
 ```js
-import styled from 'nano-style'
+import styled from 'nano-style/css'
 
 const Button = styled('button')`
   font-family: inherit;
