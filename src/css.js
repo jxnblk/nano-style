@@ -28,7 +28,7 @@ const styled = Component => (strings, ...tokens) => {
       ]
       const next = {}
       for (let key in this.props) {
-        if (typeof Component === 'string' && blacklist.includes(key)) continue
+        if (blacklist.includes(key)) continue
         next[key] = this.props[key]
       }
 

@@ -4,3 +4,4 @@ src
 docs
 test
 .babelrc
+coverage.lcov

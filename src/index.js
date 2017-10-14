@@ -11,7 +11,6 @@ const styled = Component => (...args) => {
   const dynamicStyles = args.filter(a => typeof a === 'function')
   const baseClassName = prefix + hash(JSON.stringify(staticStyles))
   const base = parse('.' + baseClassName, staticStyles)
-  const isElement = typeof Component === 'string'
 
   class Styled extends React.Component {
     constructor (props) {
@@ -29,7 +28,6 @@ const styled = Component => (...args) => {
       }
 
       this.getProps = props => {
-        if (!isElement) return props
         const next = {}
         const blacklist = [
           ...Object.keys(ThemeStyled.propTypes || {}),
