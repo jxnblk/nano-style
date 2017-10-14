@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import PropTypes from 'prop-types'
 import { create as render } from 'react-test-renderer'
 import styled from '../src'
+import system from 'styled-system'
 
 test('exports a function', t => {
   t.is(typeof styled, 'function')
@@ -44,6 +45,24 @@ test('removes props defined as propTypes', t => {
   const json = render(<Box color='tomato' />).toJSON()
   const [ style, div ] = json
   const css = style.props.dangerouslySetInnerHTML.__html
+  t.truthy(div.props.className)
+  t.falsy(div.props.color)
+})
+
+test('removes props defined as propTypes from extended components', t => {
+  const Box = styled('div')(system.color)
+  Box.propTypes = {
+    ...system.propTypes.color
+  }
+  const Flex = styled(Box)(system.alignItems)
+  Flex.propTypes = {
+    ...system.propTypes.alignItems
+  }
+  const box = render(<Box color='tomato' />).toJSON()
+  const flex = render(<Flex align='center' color='blue' />).toJSON()
+  const [ a, b, div ] = flex
+  t.truthy(div.props.className)
+  t.falsy(div.props.align)
   t.falsy(div.props.color)
 })
 
