@@ -1,27 +1,22 @@
 import React from 'react'
-import assign from 'deep-assign'
 import hash from './hash'
 import parse from './parse'
 import withTheme from './withTheme'
 
 const prefix = 'alpha_nano'
 
-const styled = Component => (...baseArgs) => {
-  const args = Array.isArray(Component._styles) ? [ ...Component._styles, ...baseArgs ] : baseArgs
+const nano = Component => (...baseArgs) => {
+  const args = Array.isArray(Component.styles) ? [ ...Component.styles, ...baseArgs ] : baseArgs
 
-  class Styled extends React.Component {
+  const Nano = withTheme(class extends React.Component {
     constructor (props) {
       super(props)
 
-      this.getStyles = props => {
-        // const props = Object.assign({}, Component.defaultProps, _props)
-        // console.log(props, args)
+      this.getStyles = _props => {
+        const props = Object.assign({}, Component.defaultProps, _props)
         const styles = args.map(arg => typeof arg === 'function' ? arg(props) : arg)
-        const style = styles.reduce((a, b) => assign(a, b), {})
-        const className = props.className || prefix + hash(JSON.stringify(style))
-        // const css = styles.map(style => parse('.' + className, style)).join('')
-
-        const css = parse('.' + className, style)
+        const className = props.className || prefix + hash(JSON.stringify(styles))
+        const css = styles.map(style => parse('.' + className, style)).join('')
 
         this.setState({
           className,
@@ -31,7 +26,7 @@ const styled = Component => (...baseArgs) => {
 
       this.getBlacklist = () => {
         return [
-          ...Object.keys(ThemeStyled.propTypes || {}),
+          ...Object.keys(Nano.propTypes || {}),
           'theme'
         ]
       }
@@ -74,23 +69,20 @@ const styled = Component => (...baseArgs) => {
           className={className}
         />,
         !!css && !next.className && <Style key='css' css={css} />
-        // !!css && <Style key='css' css={css} />
       ]
     }
-  }
+  })
 
-  const ThemeStyled = withTheme(Styled)
+  Nano.styles = args
+  Nano.displayName = typeof Component === 'string'
+    ? `Nano(${Component})`
+    : Component.displayName
 
-  ThemeStyled.defaultProps = Component.defaultProps
-  // Styled._styles = args
-
-  ThemeStyled._styles = args
-
-  return ThemeStyled
+  return Nano
 }
 
 const Style = ({ css }) =>
   <style dangerouslySetInnerHTML={{ __html: css }} />
 
-export default styled
+export default nano
 export { default as ThemeProvider } from './ThemeProvider'
