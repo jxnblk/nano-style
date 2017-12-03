@@ -1,5 +1,5 @@
 import React from 'react'
-// import assign from 'deep-assign'
+import assign from 'deep-assign'
 import hash from './hash'
 import parse from './parse'
 import withTheme from './withTheme'
@@ -15,10 +15,11 @@ const styled = Component => (...baseArgs) => {
 
       this.getStyles = props => {
         const styles = args.map(arg => typeof arg === 'function' ? arg(props) : arg)
-        // const style = styles.reduce((a, b) => assign(a, b), {})
         const className = prefix + hash(JSON.stringify(styles))
-        // const css = parse('.' + className, style)
-        const css = styles.map(style => parse('.' + className, style)).join('')
+        // const css = styles.map(style => parse('.' + className, style)).join('')
+
+        const style = styles.reduce((a, b) => assign(a, b), {})
+        const css = parse('.' + className, style)
 
         this.setState({
           className,
@@ -26,12 +27,17 @@ const styled = Component => (...baseArgs) => {
         })
       }
 
-      this.getProps = props => {
-        const next = {}
-        const blacklist = [
+      this.getBlacklist = () => {
+        if (typeof Component !== 'string') return [ 'theme' ]
+        return [
           ...Object.keys(ThemeStyled.propTypes || {}),
           'theme'
         ]
+      }
+
+      this.getProps = props => {
+        const next = {}
+        const blacklist = this.getBlacklist()
         for (let key in props) {
           if (blacklist.includes(key)) continue
           next[key] = props[key]
@@ -60,6 +66,11 @@ const styled = Component => (...baseArgs) => {
       const { className, css } = this.state
       const next = this.getProps(this.props)
 
+      const cn = [
+        className,
+        next.className,
+      ].join(' ')
+
       return [
         <Component
           key='Component'
@@ -67,12 +78,15 @@ const styled = Component => (...baseArgs) => {
           {...next}
         />,
         !!css && !next.className && <Style key='css' css={css} />
+        // !!css && <Style key='css' css={css} />
       ]
     }
   }
 
   const ThemeStyled = withTheme(Styled)
 
+  Styled.defaultProps = Component.defaultProps
+  Styled._styles = args
   ThemeStyled._styles = args
 
   return ThemeStyled

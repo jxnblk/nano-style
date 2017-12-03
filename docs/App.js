@@ -24,11 +24,15 @@ Hello.propTypes = {
   ...propTypes.color
 }
 
+Hello.defaultProps = {
+  p: 4
+}
+
 const Hi = styled(Hello)({
   fontSize: '64px',
 })
 
-Hi.defaultProps = { p: 48 }
+// Hi.defaultProps = { p: 48 }
 
 const dec = s => ({ count: s.count - 1 })
 const inc = s => ({ count: s.count + 1 })
