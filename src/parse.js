@@ -60,4 +60,4 @@ const parse = (selector, obj) => {
   return cssRules.join('')
 }
 
-export default parse
+module.exports = parse
