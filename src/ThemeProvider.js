@@ -1,5 +1,5 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+const React = require('react')
+const PropTypes = require('prop-types')
 
 const createTheme = (theme = {}) => Object.assign(function (keys = '') {
   return keys.split('.')
@@ -25,4 +25,4 @@ ThemeProvider.childContextTypes = {
   ])
 }
 
-export default ThemeProvider
+module.exports = ThemeProvider

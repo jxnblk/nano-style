@@ -1,7 +1,8 @@
-import React from 'react'
-import hash from './hash'
-import parse from './parse'
-import withTheme from './withTheme'
+const React = require('react')
+const hash = require('./hash')
+const parse = require('./parse')
+const withTheme = require('./withTheme')
+const ThemeProvider = require('./ThemeProvider')
 
 const prefix = 'nano'
 
@@ -82,5 +83,5 @@ const nano = Component => (...baseArgs) => {
 const Style = ({ css }) =>
   <style dangerouslySetInnerHTML={{ __html: css }} />
 
-export default nano
-export { default as ThemeProvider } from './ThemeProvider'
+module.exports = nano
+module.exports.ThemeProvider = ThemeProvider

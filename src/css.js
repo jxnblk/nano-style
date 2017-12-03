@@ -1,8 +1,9 @@
-import React from 'react'
-import stylis from 'stylis'
-import objss from 'objss'
-import hash from './hash'
-import withTheme from './withTheme'
+const React = require('react')
+const stylis = require('stylis')
+const objss = require('objss')
+const hash = require('./hash')
+const withTheme = require('./withTheme')
+const ThemeProvider = require('./ThemeProvider')
 
 const prefix = 'nano'
 
@@ -56,5 +57,5 @@ const styled = Component => (strings, ...tokens) => {
 const Style = ({ css }) =>
   <style dangerouslySetInnerHTML={{ __html: css }} />
 
-export default styled
-export { default as ThemeProvider } from './ThemeProvider'
+module.exports = styled
+module.exports.ThemeProvider = ThemeProvider
