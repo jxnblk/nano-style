@@ -1,5 +1,5 @@
 import React from 'react'
-import assign from 'deep-assign'
+// import assign from 'deep-assign'
 import hash from './hash'
 import parse from './parse'
 import withTheme from './withTheme'
@@ -15,9 +15,10 @@ const styled = Component => (...baseArgs) => {
 
       this.getStyles = props => {
         const styles = args.map(arg => typeof arg === 'function' ? arg(props) : arg)
-        const style = styles.reduce((a, b) => assign(a, b), {})
-        const className = prefix + hash(JSON.stringify(style))
-        const css = parse('.' + className, style)
+        // const style = styles.reduce((a, b) => assign(a, b), {})
+        const className = prefix + hash(JSON.stringify(styles))
+        // const css = parse('.' + className, style)
+        const css = styles.map(style => parse('.' + className, style)).join('')
 
         this.setState({
           className,
