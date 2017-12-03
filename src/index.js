@@ -31,6 +31,7 @@ const styled = Component => (...args) => {
         const next = {}
         const blacklist = [
           ...Object.keys(ThemeStyled.propTypes || {}),
+          'innerRef',
           'theme'
         ]
         for (let key in props) {
@@ -71,6 +72,7 @@ const styled = Component => (...args) => {
       return [
         <Component
           {...next}
+          ref={this.props.innerRef}
           key='Component'
           className={cn}
         />,
