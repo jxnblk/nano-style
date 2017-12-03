@@ -30,6 +30,8 @@ Hello.defaultProps = {
 
 const Hi = styled(Hello)({
   fontSize: '64px',
+}, {
+  color: 'tomato'
 })
 
 // Hi.defaultProps = { p: 48 }

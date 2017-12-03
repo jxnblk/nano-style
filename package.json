@@ -1,6 +1,6 @@
 {
   "name": "nano-style",
-  "version": "1.0.0-19d",
+  "version": "1.0.0-19e",
   "description": "Functional css-in-js for react",
   "main": "dist/index.js",
   "scripts": {

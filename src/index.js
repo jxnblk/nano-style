@@ -4,7 +4,7 @@ import hash from './hash'
 import parse from './parse'
 import withTheme from './withTheme'
 
-const prefix = 'nano'
+const prefix = 'alpha_nano'
 
 const styled = Component => (...baseArgs) => {
   const args = Array.isArray(Component._styles) ? [ ...Component._styles, ...baseArgs ] : baseArgs
@@ -14,11 +14,13 @@ const styled = Component => (...baseArgs) => {
       super(props)
 
       this.getStyles = props => {
+        // const props = Object.assign({}, Component.defaultProps, _props)
+        // console.log(props, args)
         const styles = args.map(arg => typeof arg === 'function' ? arg(props) : arg)
-        const className = prefix + hash(JSON.stringify(styles))
+        const style = styles.reduce((a, b) => assign(a, b), {})
+        const className = props.className || prefix + hash(JSON.stringify(style))
         // const css = styles.map(style => parse('.' + className, style)).join('')
 
-        const style = styles.reduce((a, b) => assign(a, b), {})
         const css = parse('.' + className, style)
 
         this.setState({
@@ -28,7 +30,6 @@ const styled = Component => (...baseArgs) => {
       }
 
       this.getBlacklist = () => {
-        if (typeof Component !== 'string') return [ 'theme' ]
         return [
           ...Object.keys(ThemeStyled.propTypes || {}),
           'theme'
@@ -66,16 +67,11 @@ const styled = Component => (...baseArgs) => {
       const { className, css } = this.state
       const next = this.getProps(this.props)
 
-      const cn = [
-        className,
-        next.className,
-      ].join(' ')
-
       return [
         <Component
+          {...next}
           key='Component'
           className={className}
-          {...next}
         />,
         !!css && !next.className && <Style key='css' css={css} />
         // !!css && <Style key='css' css={css} />
@@ -85,8 +81,9 @@ const styled = Component => (...baseArgs) => {
 
   const ThemeStyled = withTheme(Styled)
 
-  Styled.defaultProps = Component.defaultProps
-  Styled._styles = args
+  ThemeStyled.defaultProps = Component.defaultProps
+  // Styled._styles = args
+
   ThemeStyled._styles = args
 
   return ThemeStyled
