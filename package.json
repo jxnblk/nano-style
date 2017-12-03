@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "prepublish": "babel src -d dist",
-    "start": "x0 dev docs/App.js -o",
+    "start": "x0 dev docs/App.js -op 9000",
     "build": "x0 build docs/App.js -d docs --static",
     "size": "npm run prepublish && bundlesize",
     "cover": "nyc report --reporter=html --reporter=lcov > coverage.lcov && codecov",
@@ -15,6 +15,7 @@
   "author": "Brent Jackson",
   "license": "MIT",
   "dependencies": {
+    "deep-assign": "^2.0.0",
     "objss": "^1.0.3",
     "prop-types": "^15.6.0",
     "stylis": "^3.3.2"

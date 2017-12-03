@@ -1,25 +1,23 @@
 import React from 'react'
+import assign from 'deep-assign'
 import hash from './hash'
 import parse from './parse'
 import withTheme from './withTheme'
 
 const prefix = 'nano'
 
-const styled = Component => (...args) => {
-  const staticStyles = args.filter(a => typeof a !== 'function')
-    .reduce((a, b) => Object.assign(a, b), {})
-  const dynamicStyles = args.filter(a => typeof a === 'function')
-  const baseClassName = prefix + hash(JSON.stringify(staticStyles))
-  const base = parse('.' + baseClassName, staticStyles)
+const styled = Component => (...baseArgs) => {
+  const args = Array.isArray(Component._styles) ? [ ...Component._styles, ...baseArgs ] : baseArgs
 
   class Styled extends React.Component {
     constructor (props) {
       super(props)
 
       this.getStyles = props => {
-        const styles = dynamicStyles.map(fn => fn(props))
-        const className = prefix + hash(JSON.stringify(styles))
-        const css = styles.map(style => parse('.' + className, style)).join('')
+        const styles = args.map(arg => typeof arg === 'function' ? arg(props) : arg)
+        const style = styles.reduce((a, b) => assign(a, b), {})
+        const className = prefix + hash(JSON.stringify(style))
+        const css = parse('.' + className, style)
 
         this.setState({
           className,
@@ -37,7 +35,6 @@ const styled = Component => (...args) => {
           if (blacklist.includes(key)) continue
           next[key] = props[key]
         }
-        if (props.className) next.className = '' + props.className
 
         return next
       }
@@ -62,29 +59,20 @@ const styled = Component => (...args) => {
       const { className, css } = this.state
       const next = this.getProps(this.props)
 
-      const cn = [
-        this.props.className,
-        baseClassName,
-        className
-      ].join(' ').trim()
-
       return [
         <Component
-          {...next}
           key='Component'
-          className={cn}
+          className={className}
+          {...next}
         />,
-        !!base && <Style key='base' css={base} />,
-        !!css && <Style key='css' css={css} />,
+        !!css && !next.className && <Style key='css' css={css} />
       ]
     }
   }
 
-  Styled.defaultProps = {
-    className: ''
-  }
-
   const ThemeStyled = withTheme(Styled)
+
+  ThemeStyled._styles = args
 
   return ThemeStyled
 }

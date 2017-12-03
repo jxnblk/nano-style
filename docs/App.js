@@ -1,22 +1,7 @@
 import React from 'react'
 import connect from 'refunk'
 import { space, width, color, propTypes } from 'styled-system'
-import css from '../src/css'
 import styled, { ThemeProvider } from '../src'
-
-const CSSHello = css('h1')`
-  font-size: 32px;
-  font-weight: 600;
-  ${space}
-  ${width}
-  ${color}
-`
-
-CSSHello.propTypes = {
-  ...propTypes.space,
-  ...propTypes.width,
-  ...propTypes.color
-}
 
 const Root = styled('div')({
   fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
@@ -38,6 +23,12 @@ Hello.propTypes = {
   ...propTypes.width,
   ...propTypes.color
 }
+
+const Hi = styled(Hello)({
+  fontSize: '64px',
+})
+
+Hi.defaultProps = { p: 48 }
 
 const dec = s => ({ count: s.count - 1 })
 const inc = s => ({ count: s.count + 1 })
@@ -74,18 +65,14 @@ const App = connect(props => [
         onClick={e => { props.update(inc) }}
         children='+'
       />
+      <Hi
+        bg={colors[props.count % colors.length]}>
+        Hi {props.count}
+      </Hi>
       <Hello
-        p={[ 1, 3 ]}
-        width={[ 1, .5 ]}
         bg={colors[props.count % colors.length]}>
         Hello {props.count}
       </Hello>
-      <CSSHello
-        p={[ 1, 3 ]}
-        width={[ 1, .5 ]}
-        bg={colors[props.count % colors.length]}>
-        Hello {props.count}
-      </CSSHello>
     </Root>
   </ThemeProvider>
 ])
