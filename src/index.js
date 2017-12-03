@@ -3,7 +3,7 @@ import hash from './hash'
 import parse from './parse'
 import withTheme from './withTheme'
 
-const prefix = 'alpha_nano'
+const prefix = 'nano'
 
 const nano = Component => (...baseArgs) => {
   const args = Array.isArray(Component.styles) ? [ ...Component.styles, ...baseArgs ] : baseArgs
@@ -24,12 +24,10 @@ const nano = Component => (...baseArgs) => {
         })
       }
 
-      this.getBlacklist = () => {
-        return [
-          ...Object.keys(Nano.propTypes || {}),
-          'theme'
-        ]
-      }
+      this.getBlacklist = () => [
+        ...Object.keys(Nano.propTypes || {}),
+        'theme'
+      ]
 
       this.getProps = props => {
         const next = {}

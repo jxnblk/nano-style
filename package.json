@@ -15,7 +15,6 @@
   "author": "Brent Jackson",
   "license": "MIT",
   "dependencies": {
-    "deep-assign": "^2.0.0",
     "objss": "^1.0.3",
     "prop-types": "^15.6.0",
     "stylis": "^3.3.2"

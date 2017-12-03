@@ -115,11 +115,3 @@ test('renders server-side', t => {
   const html = renderToStaticMarkup(<Box />)
   t.snapshot(html)
 })
-
-test.skip('accepts a className prop', t => {
-  const Box = styled('div')({
-    color: 'tomato'
-  })
-  const [ div, style ] = render(<Box className='hello' />).toJSON()
-  t.regex(div.props.className, /^hello/)
-})
