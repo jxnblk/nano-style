@@ -1,5 +1,5 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+const React = require('react')
+const PropTypes = require('prop-types')
 
 const withTheme = Component => {
   return class Themed extends React.Component {
@@ -21,4 +21,4 @@ const withTheme = Component => {
   }
 }
 
-export default withTheme
+module.exports = withTheme

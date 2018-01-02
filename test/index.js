@@ -70,11 +70,10 @@ test('handles multiple arguments', t => {
   const color = props => ({ color: props.color })
   const Box = styled('div')({ display: 'inline-block' }, color)
   const json = render(<Box color='tomato' />).toJSON()
-  const [ div, astyle, bstyle ] = json
-  const a = astyle.props.dangerouslySetInnerHTML.__html
-  const b = bstyle.props.dangerouslySetInnerHTML.__html
+  const [ div, style ] = json
+  const a = style.props.dangerouslySetInnerHTML.__html
   t.regex(a, /display:inline-block/)
-  t.regex(b, /color:tomato/)
+  t.regex(a, /color:tomato/)
 })
 
 test('handles pseudoclasses', t => {
@@ -115,12 +114,4 @@ test('renders server-side', t => {
   })
   const html = renderToStaticMarkup(<Box />)
   t.snapshot(html)
-})
-
-test('accepts a className prop', t => {
-  const Box = styled('div')({
-    color: 'tomato'
-  })
-  const [ div, style ] = render(<Box className='hello' />).toJSON()
-  t.regex(div.props.className, /^hello/)
 })
