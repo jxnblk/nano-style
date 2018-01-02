@@ -27,6 +27,7 @@ const nano = Component => (...baseArgs) => {
 
       this.getBlacklist = () => [
         ...Object.keys(Nano.propTypes || {}),
+        'innerRef',
         'theme'
       ]
 
@@ -64,6 +65,7 @@ const nano = Component => (...baseArgs) => {
       return [
         <Component
           {...next}
+          ref={this.props.innerRef}
           key='Component'
           className={className}
         />,
