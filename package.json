@@ -7,6 +7,7 @@
     "prepublish": "babel src -d dist",
     "start": "x0 docs -op 9000",
     "build": "x0 build docs",
+    "static": "static-react docs/index.js",
     "size": "npm run prepublish && bundlesize",
     "cover": "nyc report --reporter=html --reporter=lcov > coverage.lcov && codecov",
     "test": "nyc ava"

@@ -1,6 +1,7 @@
 import React from 'react'
 import { renderToString } from 'react-dom/server'
 import PropTypes from 'prop-types'
+import tags from 'html-tags'
 
 export const hyphenate = s =>
   s.replace(/[A-Z]|^ms/g, '-$&').toLowerCase()
@@ -137,7 +138,7 @@ export class Provider extends React.Component {
         <Context.Provider value={context}>
           {children}
         </Context.Provider>
-        <pre children={JSON.stringify(rules, null, 2)} />
+        {false && <pre children={JSON.stringify(rules, null, 2)} />}
       </React.Fragment>
     )
   }
@@ -224,3 +225,7 @@ export const styled = (type) => (...args) => {
   })
   return Styled
 }
+
+tags.forEach(tag => {
+  styled[tag] = styled(tag)
+})

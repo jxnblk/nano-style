@@ -23,7 +23,7 @@ const theme = {
 
 const inc = s => ({ count: s.count + 1 })
 
-const Button = styled('button')({
+const Button = styled.button({
   fontFamily: 'inherit',
   fontSize: 14,
   fontWeight: 'bold',
