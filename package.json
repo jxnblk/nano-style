@@ -9,13 +9,15 @@
     "build": "x0 build docs",
     "static": "static-react docs/index.js",
     "size": "npm run prepublish && bundlesize",
-    "cover": "nyc report --reporter=html --reporter=lcov > coverage.lcov && codecov",
+    "cover": "nyc report --reporter=html --reporter=lcov > coverage.lcov",
+    "codecov": "codecov",
     "test": "nyc ava"
   },
   "keywords": [],
   "author": "Brent Jackson",
   "license": "MIT",
   "dependencies": {
+    "browser-env": "^3.2.5",
     "html-tags": "^2.0.0",
     "prop-types": "^15.6.2"
   },
@@ -28,10 +30,12 @@
     "babel-preset-stage-0": "^6.24.1",
     "babel-register": "^6.26.0",
     "bundlesize": "^0.17.0",
+    "codecov": "^3.0.2",
     "nyc": "^12.0.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-test-renderer": "^16.4.1",
+    "sinon": "^6.0.0",
     "static-react": "^4.0.0-3",
     "styled-system": "^2.3.2"
   },

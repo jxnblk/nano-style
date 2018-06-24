@@ -138,7 +138,6 @@ export class Provider extends React.Component {
         <Context.Provider value={context}>
           {children}
         </Context.Provider>
-        {false && <pre children={JSON.stringify(rules, null, 2)} />}
       </React.Fragment>
     )
   }
