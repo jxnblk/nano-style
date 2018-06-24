@@ -1,13 +1,11 @@
 import React from 'react'
 import { renderToString } from 'react-dom/server'
+import PropTypes from 'prop-types'
 
 export const hyphenate = s =>
   s.replace(/[A-Z]|^ms/g, '-$&').toLowerCase()
 
-export const Context = React.createContext({
-  createRules: () => {},
-  theme: {}
-})
+export const Context = React.createContext({})
 
 export const Style = ({ css }) =>
   <style
@@ -17,6 +15,9 @@ export const Style = ({ css }) =>
   />
 
 export class Provider extends React.Component {
+  static defaultProps = {
+    theme: {}
+  }
   initialRules = []
   didMount = false
   cache = {}
@@ -142,21 +143,48 @@ export class Provider extends React.Component {
   }
 }
 
-export const withStyle = Component => props =>
+export const withStyle = Component => React.forwardRef((props, ref) =>
   <Context.Consumer>
-    {ctx => <Component {...props} {...ctx} />}
+    {ctx => <Component {...props} {...ctx} innerRef={ref} />}
   </Context.Consumer>
+)
 
-export const Base = withStyle(class extends React.Component {
+export const omit = (props, blacklist = []) => {
+  const next = {}
+  for (const key in props) {
+    if (blacklist.includes(key)) continue
+    next[key] = props[key]
+  }
+  return next
+}
+
+export const createStyles = (args, props) => Array.isArray(args)
+  ? args.map(arg => typeof arg === 'function' ? arg(props) : arg)
+  : args
+
+const noop = () => {}
+export const Base = withStyle(class Nano extends React.Component {
   static defaultProps = {
     theme: {}
   }
 
+  static propTypes = {
+    theme: PropTypes.object.isRequired,
+    createRules: (props, name, component) => {
+      if (name === 'createRules' && typeof props[name] !== 'function') {
+        return new Error(
+          `Nano Base component requires a parent Provider component`
+        )
+      }
+    }
+  }
+
   static getDerivedStateFromProps (props, state) {
-    const { createRules, css, className } = props
+    const { createRules = noop, css, className } = props
+    const styles = createStyles(css, props)
     const combined = [
       className,
-      createRules(css)
+      createRules(styles)
     ].filter(Boolean).join(' ')
     if (combined === className) return null
     return {
@@ -174,12 +202,25 @@ export const Base = withStyle(class extends React.Component {
       css,
       is: Comp = 'div',
       theme,
+      innerRef,
       ...props
     } = this.props
     const { className } = this.state
-    // const Comp = is |
-    return <Comp {...props} className={className} />
+
+    return <Comp {...props} className={className} ref={innerRef} />
   }
 })
 
-// const styled = ...
+export const styled = (type) => (...args) => {
+  const Styled = withStyle(props => {
+    const cleaned = omit(props, Object.keys(Styled.propTypes || {}))
+    return (
+      <Base
+        is={type}
+        {...cleaned}
+        css={createStyles(args, props)}
+      />
+    )
+  })
+  return Styled
+}

@@ -14,7 +14,10 @@
   "keywords": [],
   "author": "Brent Jackson",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "html-tags": "^2.0.0",
+    "prop-types": "^15.6.2"
+  },
   "devDependencies": {
     "@compositor/x0": "^6.0.0-4",
     "ava": "^0.25.0",
@@ -28,6 +31,7 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-test-renderer": "^16.4.1",
+    "static-react": "^4.0.0-3",
     "styled-system": "^2.3.2"
   },
   "ava": {
@@ -39,7 +43,7 @@
   "bundlesize": [
     {
       "path": "./dist/index.js",
-      "maxSize": "2 kb"
+      "maxSize": "3.2 kb"
     }
   ]
 }
