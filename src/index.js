@@ -66,7 +66,9 @@ export class Provider extends React.Component {
       if (value === null || value === false) continue
       switch (typeof value) {
         case 'object':
-          console.log('todo nested', key, value)
+          classNames.push(
+            this.parseStyle(value, [ ...parents, key ])
+          )
           continue
         case 'number':
           classNames.push(
@@ -101,7 +103,7 @@ export class Provider extends React.Component {
       : '.' + className
     let rule = [ selector, '{', declaration, '}' ].join('')
     if (atRule) {
-      rule = [ media, '{', rule, '}' ].join('')
+      rule = [ atRule, '{', rule, '}' ].join('')
     }
     this.cache[id] = className
     if (!this.didMount) {

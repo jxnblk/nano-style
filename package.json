@@ -27,7 +27,8 @@
     "nyc": "^12.0.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
-    "react-test-renderer": "^16.4.1"
+    "react-test-renderer": "^16.4.1",
+    "styled-system": "^2.3.2"
   },
   "ava": {
     "require": [

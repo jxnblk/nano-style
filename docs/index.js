@@ -1,16 +1,17 @@
 import React from 'react'
+import { space, fontSize } from 'styled-system'
 import {
   Provider,
   Base
 } from '../src'
 
 const colors = [
-  'red',
-  'magenta',
-  'blue',
-  'cyan',
-  'green',
-  'yellow',
+  '#f00',
+  '#f0f',
+  '#00f',
+  '#0ff',
+  '#0f0',
+  '#ff0',
 ]
 
 const inc = s => ({ count: s.count + 1 })
@@ -25,6 +26,7 @@ export default class extends React.Component {
   render () {
     const { count } = this.state
     const color = colors[count % colors.length]
+    const hoverColor = colors[(count + 1) % colors.length]
 
     return (
       <Provider>
@@ -35,10 +37,30 @@ export default class extends React.Component {
           css={{
             fontWeight: 'bold',
             padding: 64,
-            backgroundColor: color
+            backgroundColor: color,
+            '@media (min-width: 48em)': {
+              fontSize: 32
+            },
+            '&:hover': {
+              backgroundColor: hoverColor
+            }
           }}>
           Hello
         </Base>
+        <Base
+          is='h1'
+          css={[
+            space({
+              p: [ 4, 5 ],
+              m: 0
+            }),
+            fontSize({
+              fontSize: [ 4, 5, 6 ]
+            }),
+            { color }
+          ]}
+          children='beep boop'
+        />
       </Provider>
     )
   }
