@@ -15,7 +15,7 @@ export const Style = ({ css }) =>
     }}
   />
 
-export class Provider extends React.Component {
+export class StyleProvider extends React.Component {
   static defaultProps = {
     theme: {}
   }
@@ -35,17 +35,21 @@ export class Provider extends React.Component {
     return [...rules].sort((a, b) => a > b ? 1 : -1)
   }
 
-  constructor (props) {
+  constructor (props, ctx) {
     super()
-    renderToString(
-      <Context.Provider
-        value={{
-          theme: props.theme,
-          createRules: this.createRules
-        }}>
-        {props.children}
-      </Context.Provider>
-    )
+    try {
+      renderToString(
+        <Context.Provider
+          value={{
+            theme: props.theme,
+            createRules: this.createRules
+          }}>
+          {props.children}
+        </Context.Provider>
+      )
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   componentDidMount () {
@@ -174,7 +178,7 @@ export const Base = withStyle(class Nano extends React.Component {
     createRules: (props, name, component) => {
       if (name === 'createRules' && typeof props[name] !== 'function') {
         return new Error(
-          `Nano Base component requires a parent Provider component`
+          `Nano Base component requires a parent StyleProvider component`
         )
       }
     }
@@ -229,3 +233,5 @@ export const styled = (type) => (...args) => {
 tags.forEach(tag => {
   styled[tag] = styled(tag)
 })
+
+export default styled

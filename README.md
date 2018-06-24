@@ -29,18 +29,18 @@ npm i nano-style
 
 ## Getting Started
 
-Include the `Provider` component at the top level of your application.
+Include the `StyleProvider` component at the top level of your application.
 
 ```jsx
 import React from 'react'
-import { Provider as NanoProvider } from 'nano-style'
+import { StyleProvider } from 'nano-style'
 
 export default class App extends React.Component {
   render () {
     return (
-      <NanoProvider>
+      <StyleProvider>
         {/* application elements */}
-      </NanoProvider>
+      </StyleProvider>
     )
   }
 }
@@ -126,11 +126,11 @@ export default Heading
 
 ### Theming
 
-A `theme` object can be supplied to the `Provider` component and used in nano-style components.
+A `theme` object can be supplied to the `StyleProvider` component and used in nano-style components.
 
 ```jsx
 import React from 'react'
-import { Provider } from 'nano-style'
+import { StyleProvider } from 'nano-style'
 
 const theme = {
   colors: {
@@ -141,9 +141,9 @@ const theme = {
 export default class App extends React.Component {
   render () {
     return (
-      <Provider theme={theme}>
+      <StyleProvider theme={theme}>
         {/* elements */}
-      </Provider>
+      </StyleProvider>
     )
   }
 }
@@ -175,12 +175,12 @@ const Heading = props =>
 
 ## API
 
-### `Provider`
+### `StyleProvider`
 
-The Provider component renders and caches CSS rules and also provides a `theme` object via React context.
+The StyleProvider component renders and caches CSS rules and also provides a `theme` object via React context.
 
 ```js
-import { Provider } from 'nano-style'
+import { StyleProvider } from 'nano-style'
 ```
 
 #### Props
@@ -254,8 +254,8 @@ The `withStyle` [higher-order component][hoc] provides nano-style context to the
 
 ## How it works
 
-Using `React.Fragment`, nano-style's Provider component renders a `<style>` tag before its child elements.
-Each nano-style component creates a CSS rule with context from the Provider, and the Provider renders and caches the style.
+Using `React.Fragment`, nano-style's StyleProvider component renders a `<style>` tag before its child elements.
+Each nano-style component creates a CSS rule with context from the StyleProvider, and the StyleProvider renders and caches the style.
 
 [hoc]: http://www.reactjs.org/docs/higher-order-components.html
 [sc]: https://github.com/styled-components/styled-components
