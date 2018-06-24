@@ -50,5 +50,9 @@
       "path": "./dist/index.js",
       "maxSize": "3.2 kb"
     }
-  ]
+  ],
+  "x0": {
+    "title": "nano-style",
+    "basename": "/nano-style"
+  }
 }
