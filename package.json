@@ -1,6 +1,6 @@
 {
   "name": "nano-style",
-  "version": "1.0.0",
+  "version": "2.0.0-0",
   "description": "Functional css-in-js for react",
   "main": "dist/index.js",
   "scripts": {
@@ -14,10 +14,8 @@
   "keywords": [],
   "author": "Brent Jackson",
   "license": "MIT",
-  "dependencies": {
-  },
-  "devDependencies": {
-  },
+  "dependencies": {},
+  "devDependencies": {},
   "ava": {
     "require": [
       "babel-register"
