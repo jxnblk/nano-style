@@ -52,6 +52,10 @@ Button.propTypes = {
   ...space.propTypes,
 }
 
+const PillButton = styled(Button)({
+  borderRadius: 99999
+})
+
 export default class extends React.Component {
   state = {
     count: 0
@@ -72,6 +76,7 @@ export default class extends React.Component {
           onClick={e => { this.update(inc) }}>
           Beep
         </Button>
+        <PillButton bg='purple'>Pill</PillButton>
         <Base
           css={{
             fontWeight: 'bold',

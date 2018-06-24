@@ -29,9 +29,10 @@ export class Provider extends React.Component {
   }
 
   get rules () {
-    return this.didMount
+    const rules = this.didMount
       ? this.state.rules
       : this.initialRules
+    return [...rules].sort((a, b) => a > b ? 1 : -1)
   }
 
   constructor (props) {
