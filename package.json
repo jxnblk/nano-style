@@ -15,25 +15,8 @@
   "author": "Brent Jackson",
   "license": "MIT",
   "dependencies": {
-    "objss": "^1.0.3",
-    "prop-types": "^15.6.0",
-    "stylis": "^3.3.2"
   },
   "devDependencies": {
-    "@compositor/x0": "^2.0.0-3",
-    "ava": "^0.22.0",
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.0",
-    "babel-preset-react": "^6.24.1",
-    "babel-preset-stage-0": "^6.24.1",
-    "babel-register": "^6.26.0",
-    "bundlesize": "^0.15.2",
-    "codecov": "^2.3.0",
-    "nyc": "^11.2.1",
-    "react": "^16.0.0",
-    "react-test-renderer": "^16.0.0",
-    "refunk": "^2.0.0-1",
-    "styled-system": "^1.0.7"
   },
   "ava": {
     "require": [
@@ -44,10 +27,6 @@
   "bundlesize": [
     {
       "path": "./dist/index.js",
-      "maxSize": "2 kb"
-    },
-    {
-      "path": "./dist/css.js",
       "maxSize": "2 kb"
     }
   ]
