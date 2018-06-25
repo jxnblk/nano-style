@@ -159,7 +159,7 @@ export default class extends React.Component {
             }}>
             <Wobble duration={48}>
               <Svg depth={layers[0]} stroke='cyan'>
-                <Spin duration={6}>
+                <Spin duration={16}>
                   <circle
                     r={6}
                     strokeWidth={2}
@@ -170,7 +170,7 @@ export default class extends React.Component {
                 </Spin>
               </Svg>
               <Svg depth={layers[1]}>
-                <Spin duration={8}>
+                <Spin duration={32}>
                   <circle
                     r={8}
                     opacity={3/4}
@@ -179,9 +179,18 @@ export default class extends React.Component {
                     vectorEffect='non-scaling-stroke'
                   />
                 </Spin>
+                <Spin duration={36}>
+                  <circle
+                    r={8}
+                    opacity={1/8}
+                    strokeWidth={4}
+                    strokeDasharray='32 64 72 128'
+                    vectorEffect='non-scaling-stroke'
+                  />
+                </Spin>
               </Svg>
               <Svg depth={layers[2]} >
-                <Spin duration={16}>
+                <Spin duration={64}>
                   <circle
                     r={11}
                     opacity={3/4}
@@ -191,9 +200,18 @@ export default class extends React.Component {
                     vectorEffect='non-scaling-stroke'
                   />
                 </Spin>
+                <Spin duration={68}>
+                  <circle
+                    r={11}
+                    opacity={1/4}
+                    strokeWidth={2}
+                    strokeDasharray='64 48 32 96 128'
+                    vectorEffect='non-scaling-stroke'
+                  />
+                </Spin>
               </Svg>
               <Svg depth={8}>
-                <Fade duration={24}>
+                <Fade duration={48}>
                   <circle
                     r={7}
                     opacity={2/4}
