@@ -22,7 +22,12 @@ const Header = styled(Flex)({
 export default class extends React.Component {
   render () {
     return (
-      <React.Fragment>
+      <Box color='magenta' bg='m0'>
+        <Flex alignItems='center'>
+          <Text p={2} fontWeight='bold'>
+            nano-style
+          </Text>
+        </Flex>
         <Header
           alignItems='center'
           color='magenta'
@@ -59,8 +64,28 @@ export default class extends React.Component {
           </Container>
         </Header>
         <Container px={4} py={5}>
+          <Text>
+            - Pure React with no side effects
+            - Renders styles in an inline style tag
+            - Server-side rendering with no additional setup
+            - Works in iframes
+            - Flexible API
+            - Functional styles
+            - Automatically removes props defined as propTypes
+            - Theming support
+            - 3 kB
+            - Pure React with no side effects
+            - Renders styles in an inline style tag
+            - Server-side rendering with no additional setup
+            - Works in iframes
+            - Flexible API
+            - Functional styles
+            - Automatically removes props defined as propTypes
+            - Theming support
+            - 3 kB
+          </Text>
         </Container>
-      </React.Fragment>
+      </Box>
     )
   }
 }

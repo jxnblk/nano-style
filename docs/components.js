@@ -32,9 +32,14 @@ Flex.propTypes = {
   ...justifyContent.propTypes,
 }
 
-export const Container = styled(Box)({
+export const ContainerInner = styled(Box)({
   maxWidth: 768
 })
+
+export const Container = props =>
+  <Box width={[ 1, 1, '80vw' ]}>
+    <ContainerInner {...props} />
+  </Box>
 
 Container.defaultProps = {
   mx: 'auto'
