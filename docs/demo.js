@@ -1,6 +1,7 @@
 import React from 'react'
 import { space, fontSize, color } from 'styled-system'
 import {
+  StyleProvider,
   Base,
   styled,
 } from '../src'
@@ -68,7 +69,7 @@ export default class extends React.Component {
     const hoverColor = colors[(count + 1) % colors.length]
 
     return (
-      <React.Fragment>
+      <StyleProvider>
         <h1>Stress test</h1>
         <Button
           m={3}
@@ -104,7 +105,7 @@ export default class extends React.Component {
           ]}
           children='beep boop'
         />
-      </React.Fragment>
+      </StyleProvider>
     )
   }
 }

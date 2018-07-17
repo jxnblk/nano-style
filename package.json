@@ -5,9 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "prepublish": "babel src -d dist",
-    "start": "x0 docs -op 9000",
-    "build": "x0 build docs",
-    "static": "static-react docs/index.js",
+    "start": "ok docs -op 9000",
+    "build": "ok build docs",
     "size": "npm run prepublish && bundlesize",
     "cover": "nyc report --reporter=html --reporter=lcov > coverage.lcov",
     "codecov": "codecov",
@@ -19,10 +18,12 @@
   "dependencies": {
     "browser-env": "^3.2.5",
     "html-tags": "^2.0.0",
-    "prop-types": "^15.6.2"
+    "ok-cli": "^2.0.8",
+    "prop-types": "^15.6.2",
+    "sdbm": "^1.0.0",
+    "shortid": "^2.2.12"
   },
   "devDependencies": {
-    "@compositor/x0": "^6.0.0-4",
     "ava": "^0.25.0",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
@@ -38,7 +39,6 @@
     "react-test-renderer": "^16.4.1",
     "repng": "^3.0.0",
     "sinon": "^6.0.0",
-    "static-react": "^4.0.0-3",
     "styled-system": "^2.3.2"
   },
   "ava": {
@@ -53,7 +53,7 @@
       "maxSize": "3.2 kb"
     }
   ],
-  "x0": {
+  "ok": {
     "title": "nano-style",
     "basename": "/nano-style"
   }

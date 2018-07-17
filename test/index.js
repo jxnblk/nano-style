@@ -6,7 +6,7 @@ import React from 'react'
 import { create as render } from 'react-test-renderer'
 import TestUtils from 'react-dom/test-utils'
 import {
-  Provider,
+  StyleProvider,
   Base,
   styled,
   withStyle,
@@ -21,9 +21,9 @@ const renderJSON = el => render(el).toJSON()
 
 test('renders a style tag', t => {
   const json = renderJSON(
-    <Provider>
+    <StyleProvider>
       <Base css={{ color: 'tomato' }} />
-    </Provider>
+    </StyleProvider>
   )
   const [ style ] = json
   const css = style.props.dangerouslySetInnerHTML.__html
@@ -31,12 +31,12 @@ test('renders a style tag', t => {
   t.regex(css, /color:tomato/)
 })
 
-test('exports Provider', t => {
-  t.is(typeof Provider, 'function')
+test('exports StyleProvider', t => {
+  t.is(typeof StyleProvider, 'function')
 })
 
-test('Provider renders', t => {
-  const json = renderJSON(<Provider />)
+test('StyleProvider renders', t => {
+  const json = renderJSON(<StyleProvider />)
   t.snapshot(json)
 })
 
@@ -67,21 +67,21 @@ test('withStyle returns a component', t => {
 
 test('Base renders with styles', t => {
   const json = renderJSON(
-    <Provider>
+    <StyleProvider>
       <Base
         css={{
           color: 'tomato',
           fontSize: 32
         }}
       />
-    </Provider>
+    </StyleProvider>
   )
   t.snapshot(json)
 })
 
 test('Base renders with an array of styles', t => {
   const json = renderJSON(
-    <Provider>
+    <StyleProvider>
       <Base
         css={[
           {
@@ -91,7 +91,7 @@ test('Base renders with an array of styles', t => {
           { padding: 32 }
         ]}
       />
-    </Provider>
+    </StyleProvider>
   )
   const [ style ] = json
   const css = style.props.dangerouslySetInnerHTML.__html
@@ -102,7 +102,7 @@ test('Base renders with an array of styles', t => {
 
 test('Base renders pseudoclass styles', t => {
   const json = renderJSON(
-    <Provider>
+    <StyleProvider>
       <Base
         css={{
           color: 'tomato',
@@ -112,7 +112,7 @@ test('Base renders pseudoclass styles', t => {
           }
         }}
       />
-    </Provider>
+    </StyleProvider>
   )
   const [ style ] = json
   const css = style.props.dangerouslySetInnerHTML.__html
@@ -122,7 +122,7 @@ test('Base renders pseudoclass styles', t => {
 
 test('Base renders with media queries', t => {
   const json = renderJSON(
-    <Provider>
+    <StyleProvider>
       <Base
         css={{
           fontSize: 32,
@@ -131,7 +131,7 @@ test('Base renders with media queries', t => {
           }
         }}
       />
-    </Provider>
+    </StyleProvider>
   )
   const [ style ] = json
   const css = style.props.dangerouslySetInnerHTML.__html
@@ -142,11 +142,11 @@ test('Base renders with media queries', t => {
 
 test('Base renders with null styles', t => {
   const json = renderJSON(
-    <Provider>
+    <StyleProvider>
       <Base
         css={null}
       />
-    </Provider>
+    </StyleProvider>
   )
   const [ style ] = json
   const css = style.props.dangerouslySetInnerHTML.__html
@@ -156,11 +156,11 @@ test('Base renders with null styles', t => {
 
 test('Base renders with null values', t => {
   const json = renderJSON(
-    <Provider>
+    <StyleProvider>
       <Base
         css={{ color: null }}
       />
-    </Provider>
+    </StyleProvider>
   )
   const [ style ] = json
   const css = style.props.dangerouslySetInnerHTML.__html
@@ -176,9 +176,9 @@ test('styled omits props defined as propTypes', t => {
     color: () => {}
   }
   const json = renderJSON(
-    <Provider>
+    <StyleProvider>
       <Box color='tomato' />
-    </Provider>
+    </StyleProvider>
   )
   const [ style, box ] = json
   const css = style.props.dangerouslySetInnerHTML.__html
@@ -190,9 +190,9 @@ test('styled omits props defined as propTypes', t => {
 
 test('moves rules to state on mount', t => {
   const instance = TestUtils.renderIntoDocument(
-    <Provider>
+    <StyleProvider>
       <Base css={{ color: 'tomato' }} />
-    </Provider>
+    </StyleProvider>
   )
   t.is(instance.state.rules.length, 1)
   instance.createRules({ color: 'blue' })
