@@ -1,38 +1,215 @@
 
 # nano-style
 
-React functional CSS-in-JS
+Inlined, functional CSS-in-JS for React
 
 [![Build Status][build-badge]][build]
 [![Coverage][coverage-badge]][coverage]
-<!-- ![gzip bundle size][size-badge] -->
+![gzip bundle size][size-badge]
 
 [build-badge]: https://img.shields.io/travis/jxnblk/nano-style/master.svg?style=flat-square
 [build]: https://travis-ci.org/jxnblk/nano-style
 [coverage-badge]: https://img.shields.io/codecov/c/github/jxnblk/nano-style.svg?style=flat-square
 [coverage]: https://codecov.io/github/jxnblk/nano-style
-[size-badge]: https://img.shields.io/badge/gzip%20size-1.66%20kB-brightgreen.svg?style=flat-square
+[size-badge]: https://img.shields.io/badge/gzip%20size-3.2%20kB-brightgreen.svg?style=flat-square
 
 ```sh
 npm i nano-style
 ```
 
-- Use object literals **or** CSS syntax
-- Pure React - no side effects
+- Pure React with no side effects
+- Renders styles in an inline style tag
+- Server-side rendering with no additional setup
+- Works in iframes
+- Flexible API
 - Functional styles
+- Automatically removes props defined as propTypes
 - Theming support
-- Universal rendering with no additional setup
-- Removes props defined as propTypes from rendered HTML
+- 3 kB
+
+## Getting Started
+
+Include the `StyleProvider` component at the top level of your application.
+
+```jsx
+import React from 'react'
+import { StyleProvider } from 'nano-style'
+
+export default class App extends React.Component {
+  render () {
+    return (
+      <StyleProvider>
+        {/* application elements */}
+      </StyleProvider>
+    )
+  }
+}
+```
+
+To create style components, use the `Base` component or the `styled` higher-order component.
+
+```jsx
+// example with Base component
+import React from 'react'
+import { Base } from 'nano-style'
+
+const Heading = props =>
+  <Base
+    is='h2'
+    {...props}
+    css={{
+      margin: 0,
+      fontSize: 48
+    }}
+  />
+
+export default Heading
+```
+
+Alternatively, the same component can be created with the `styled` function.
+
+```jsx
+// example with `styled` function
+import React from 'react'
+import { styled } from 'nano-style'
+
+const Heading = styled.h2({
+  margin: 0,
+  fontSize: 48
+})
+```
+
+### Functional Styles
+
+In addition to style objects, functions can be passed to the Base component or `styled` function.
+
+```jsx
+// example with Base component
+import React from 'react'
+import { Base } from 'nano-style'
+
+const color = props => ({
+  color: props.color
+})
+
+const Heading = props =>
+  <Base
+    is='h2'
+    {...props}
+    css={[
+      {
+        margin: 0,
+        fontSize: 48
+      },
+      color
+    ]}
+  />
+
+export default Heading
+```
+
+```jsx
+// example with `styled` functon
+import { styled } from 'nano-style'
+
+const color = props => ({
+  color: props.color
+})
+
+const Heading = styled.h2({
+  margin: 0,
+  fontSize: 48
+}, color)
+
+export default Heading
+```
+
+### Theming
+
+A `theme` object can be supplied to the `StyleProvider` component and used in nano-style components.
+
+```jsx
+import React from 'react'
+import { StyleProvider } from 'nano-style'
+
+const theme = {
+  colors: {
+    blue: '#08c'
+  }
+}
+
+export default class App extends React.Component {
+  render () {
+    return (
+      <StyleProvider theme={theme}>
+        {/* elements */}
+      </StyleProvider>
+    )
+  }
+}
+```
+
+```jsx
+import React from 'react'
+import { Base } from 'nano-style'
+
+const color = props => ({
+  color: props.theme.colors[props.color] || props.color
+})
+
+const Heading = props =>
+  <Base
+    is='h2'
+    {...props}
+    css={[
+      {
+        margin: 0,
+        fontSize: 48
+      },
+      color
+    ]}
+  />
+```
 
 
-## Usage
 
-### Object Literal Syntax
+## API
+
+### `StyleProvider`
+
+The StyleProvider component renders and caches CSS rules and also provides a `theme` object via React context.
 
 ```js
-import styled from 'nano-style'
+import { StyleProvider } from 'nano-style'
+```
 
-const Button = styled('button')(props => ({
+#### Props
+
+- `theme` object that is provided via context to Base components
+
+### `Base`
+
+The Base component provides a very React-like API for creating style components.
+
+```jsx
+import { Base } from 'nano-style'
+```
+
+#### Props
+
+- `css` object or array of style objects or functions
+- `is` sets the underlying HTML element or React component to render
+- `innerRef` passes refs to underlying element
+
+### `styled`
+
+The `styled` function is a [higher-order component][hoc] that works similarly to [styled-components][sc] and [emotion][emotion].
+This function uses the `Base` component to return a new component.
+
+```js
+import { styled } from 'nano-style'
+
+const Button = styled.button(props => ({
   fontFamily: 'inherit',
   fontSize: '14px',
   fontWeight: props.theme.bold,
@@ -67,74 +244,21 @@ const Button = styled('button')(props => ({
 }))
 ```
 
-### CSS Syntax
+### `withStyle`
 
-```js
-import styled from 'nano-style/css'
+The `withStyle` [higher-order component][hoc] provides nano-style context to the returned component. It adds the following props:
 
-const Button = styled('button')`
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: ${props => props.theme.bold};
-  line-height: ${16/14};
-  display: inline-block;
-  margin: 0;
-  padding-left: ${props => props.theme.space[3] + 'px'};
-  padding-right: ${props => props.theme.space[3] + 'px'};
-  padding-top: ${props => props.theme.space[2] + 'px'};
-  padding-bottom: ${props => props.theme.space[2] + 'px'};
-  vertical-align: middle;
-  text-align: center;
-  text-decoration: none;
-  border-radius: ${props => props.theme.radius};
-  border: 0;
-  appearance: none;
-  color: white;
-  background-color: props.theme.colors.blue;
+- `theme` the theme context object
+- `createRules` function to create CSS rules, returns a `className` string
 
-  &:hover {
-    box-shadow: inset 0 0 0 999px ${darken(1/8)};
-  }
-
-  &:focus {
-    outline: 0;
-    box-shadow: 0 0 0 2px ${props => props.theme.colors.blue};
-  }
-
-  &:active {
-    box-shadow: inset 0 0 8px ${darken(1/4)};
-  }
-
-  &:disabled {
-    opacity: 1/4
-  }
-`
-```
 
 ## How it works
 
-Using React 16's ability to return arrays of elements,
-nano-style generates CSS during component rendering
-and inserts CSS into a `<style>` element inlined with the component.
-The returned array looks something like this:
+Using `React.Fragment`, nano-style's StyleProvider component renders a `<style>` tag before its child elements.
+Each nano-style component creates a CSS rule with context from the StyleProvider, and the StyleProvider renders and caches the style.
 
-```jsx
-return [
-  <Style css={css} />,
-  <Component {...props} />
-]
-```
-
-### Caveats
-
-Currently, this approach does not attempt to deduplicate repeated CSS when a single component
-is rendered in multiple instances.
-While this does work, it may present some slight performance issues when a component
-is used multiple times in a page.
-
-### Potential areas for improvement
-
-- Caching mechanism
-- Babel plugin
+[hoc]: http://www.reactjs.org/docs/higher-order-components.html
+[sc]: https://github.com/styled-components/styled-components
+[emotion]: https://github.com/emotion-js/emotion
 
 [MIT License](LICENSE.md)

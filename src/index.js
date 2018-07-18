@@ -1,89 +1,237 @@
-const React = require('react')
-const hash = require('./hash')
-const parse = require('./parse')
-const withTheme = require('./withTheme')
-const ThemeProvider = require('./ThemeProvider')
+import React from 'react'
+import { renderToString } from 'react-dom/server'
+import PropTypes from 'prop-types'
+import tags from 'html-tags'
 
-const prefix = 'nano'
+export const hyphenate = s =>
+  s.replace(/[A-Z]|^ms/g, '-$&').toLowerCase()
 
-const nano = Component => (...baseArgs) => {
-  const args = Array.isArray(Component.styles) ? [ ...Component.styles, ...baseArgs ] : baseArgs
+export const Context = React.createContext({})
 
-  const Nano = withTheme(class extends React.Component {
-    constructor (props) {
-      super(props)
+export const Style = ({ css }) =>
+  <style
+    dangerouslySetInnerHTML={{
+      __html: css
+    }}
+  />
 
-      this.getStyles = _props => {
-        const props = Object.assign({}, Component.defaultProps, _props)
-        const styles = args.map(arg => typeof arg === 'function' ? arg(props) : arg)
-        const className = props.className || prefix + hash(JSON.stringify(styles))
-        const css = styles.map(style => parse('.' + className, style)).join('')
+export class StyleProvider extends React.Component {
+  static defaultProps = {
+    theme: {}
+  }
+  initialRules = []
+  didMount = false
+  cache = {}
+  count = 0
 
-        this.setState({
-          className,
-          css
-        })
+  state = {
+    rules: []
+  }
+
+  get rules () {
+    const rules = this.didMount
+      ? this.state.rules
+      : this.initialRules
+    return [...rules].sort((a, b) => a > b ? 1 : -1)
+  }
+
+  constructor (props, ctx) {
+    super()
+    try {
+      renderToString(
+        <Context.Provider
+          value={{
+            theme: props.theme,
+            createRules: this.createRules
+          }}>
+          {props.children}
+        </Context.Provider>
+      )
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  componentDidMount () {
+    this.setState({
+      rules: this.initialRules
+    }, () => {
+      this.didMount = true
+    })
+  }
+
+  createRules = (args) => {
+    args = Array.isArray(args) ? args : [ args ]
+    const classNames = args.map(style => this.parseStyle(style))
+    return classNames.join(' ')
+  }
+
+  parseStyle = (obj, parents = []) => {
+    const classNames = []
+    for (const key in obj) {
+      const value = obj[key]
+      if (value === null || value === false) continue
+      switch (typeof value) {
+        case 'object':
+          classNames.push(
+            this.parseStyle(value, [ ...parents, key ])
+          )
+          continue
+        case 'number':
+          classNames.push(
+            this.createRule(key, value + 'px', parents)
+          )
+          continue
+        case 'string':
+          classNames.push(
+            this.createRule(key, value, parents)
+          )
       }
+    }
+    return classNames.join(' ')
+  }
 
-      this.getBlacklist = () => [
-        ...Object.keys(Nano.propTypes || {}),
-        'innerRef',
-        'theme'
+  createRule = (key, value, parents = []) => {
+    const declaration = [ hyphenate(key), value ].join(':')
+    const id = [ ...parents, declaration ].join('')
+    const cached = this.cache[id]
+    if (cached) return cached
+    const className = this.createClassName()
+    this.addRule({ id, className, declaration, parents })
+    return className
+  }
+
+  addRule = ({ id, className, declaration, parents }) => {
+    const pseudos = parents.filter(key => /&:/.test(key))
+      .map(selector => selector.replace('&', '.' + className))
+    const atRule = parents.find(key => /^@/.test(key))
+    const selector = pseudos.length
+      ? pseudos.join(',')
+      : '.' + className
+    let rule = [ selector, '{', declaration, '}' ].join('')
+    if (atRule) {
+      rule = [ atRule, '{', rule, '}' ].join('')
+    }
+    this.cache[id] = className
+    if (!this.didMount) {
+      this.initialRules.push(rule)
+      return
+    }
+    this.setState(state => ({
+      rules: [
+        ...state.rules,
+        rule
       ]
+    }))
+  }
 
-      this.getProps = props => {
-        const next = {}
-        const blacklist = this.getBlacklist()
-        for (let key in props) {
-          if (blacklist.includes(key)) continue
-          next[key] = props[key]
-        }
+  createClassName = () => {
+    return 'x' + (this.count++).toString(32)
+  }
 
-        return next
-      }
-
-      this.state = {
-        className: '',
-        css: ''
-      }
+  render () {
+    const { theme, children } = this.props
+    const rules = this.rules
+    const context = {
+      theme,
+      createRules: this.createRules
     }
 
-    componentWillMount () {
-      this.getStyles(this.props)
-    }
-
-    componentWillReceiveProps (next) {
-      if (next !== this.props) {
-        this.getStyles(next)
-      }
-    }
-
-    render () {
-      const { className, css } = this.state
-      const next = this.getProps(this.props)
-
-      return [
-        <Component
-          {...next}
-          ref={this.props.innerRef}
-          key='Component'
-          className={className}
-        />,
-        !!css && !next.className && <Style key='css' css={css} />
-      ]
-    }
-  })
-
-  Nano.styles = args
-  Nano.displayName = typeof Component === 'string'
-    ? `Nano(${Component})`
-    : Component.displayName
-
-  return Nano
+    return (
+      <React.Fragment>
+        <Style css={rules.join('')} />
+        <Context.Provider value={context}>
+          {children}
+        </Context.Provider>
+      </React.Fragment>
+    )
+  }
 }
 
-const Style = ({ css }) =>
-  <style dangerouslySetInnerHTML={{ __html: css }} />
+export const withStyle = Component => React.forwardRef((props, ref) =>
+  <Context.Consumer>
+    {ctx => <Component {...props} {...ctx} innerRef={ref} />}
+  </Context.Consumer>
+)
 
-module.exports = nano
-module.exports.ThemeProvider = ThemeProvider
+export const omit = (props, blacklist = []) => {
+  const next = {}
+  for (const key in props) {
+    if (blacklist.includes(key)) continue
+    next[key] = props[key]
+  }
+  return next
+}
+
+export const createStyles = (args, props) => Array.isArray(args)
+  ? args.map(arg => typeof arg === 'function' ? arg(props) : arg)
+  : args
+
+const noop = () => {}
+export const Base = withStyle(class Nano extends React.Component {
+  static defaultProps = {
+    theme: {}
+  }
+
+  static propTypes = {
+    theme: PropTypes.object.isRequired,
+    createRules: (props, name, component) => {
+      if (name === 'createRules' && typeof props[name] !== 'function') {
+        return new Error(
+          `Nano Base component requires a parent StyleProvider component`
+        )
+      }
+    }
+  }
+
+  static getDerivedStateFromProps (props, state) {
+    const { createRules = noop, css, className } = props
+    const styles = createStyles(css, props)
+    const combined = [
+      className,
+      createRules(styles)
+    ].filter(Boolean).join(' ')
+    if (combined === className) return null
+    return {
+      className: combined
+    }
+  }
+
+  state = {
+    className: this.props.className
+  }
+
+  render () {
+    const {
+      createRules,
+      css,
+      is: Comp = 'div',
+      theme,
+      innerRef,
+      ...props
+    } = this.props
+    const { className } = this.state
+
+    return <Comp {...props} className={className} ref={innerRef} />
+  }
+})
+
+export const styled = (type) => (...args) => {
+  const Styled = withStyle(props => {
+    const cleaned = omit(props, Object.keys(Styled.propTypes || {}))
+    return (
+      <Base
+        is={type}
+        {...cleaned}
+        css={createStyles(args, props)}
+      />
+    )
+  })
+  return Styled
+}
+
+tags.forEach(tag => {
+  styled[tag] = styled(tag)
+})
+
+export default styled
