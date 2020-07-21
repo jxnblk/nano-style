@@ -28,7 +28,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "babel-register": "^6.26.0",
     "bundlesize": "^0.15.2",
-    "codecov": "^2.3.0",
+    "codecov": "^3.7.1",
     "nyc": "^11.2.1",
     "react": "^16.0.0",
     "react-test-renderer": "^16.0.0",
